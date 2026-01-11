@@ -1,7 +1,8 @@
 <div>
-    @if($show)
+    @if ($show)
         <div class="fixed overflow-y-auto inset-0 bg-black/50 z-50 flex items-center justify-center">
-            <div class="w-full max-w-3xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div
+                class="w-full max-w-3xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -20,73 +21,93 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="#">
+                <form action="{{ route('simpan.pengeluaran') }}" method="POST">
+                    @csrf
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label for="name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
-                            <select id="name"
+                            <select id="name" name="id_kategori"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                 <option selected="">Select category</option>
-                                @foreach ($kategori as $item )
-                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                <option selected="">Pilih Kategori</option>
+                                @foreach ($kategori as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
-                               
-                               
+                                @error('id_kategori')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
                             </select>
                         </div>
                         <div>
-                            <label for="brand"
+                            <label for="tujuan"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tujuan</label>
-                            <input type="text" name="brand" id="brand"
+                            <input type="text" name="tujuan" id="tujuan"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Product brand" required="">
+                                placeholder="masukan tujuan" required="">
+                            @error('tujuan')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div>
-                            <label for="price"
+                            <label for="total"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total</label>
-                            <input type="number" name="price" id="price"
+                            <input type="number" name="total" id="total"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="$2999" required="">
+                                placeholder="Total pengeluaran" required="">
+                            @error('total')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metode
                                 Pembayaran</label>
-                            <select id="category"
+                            <select id="category" name="metode_pembayaran"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select category</option>
-                                <option value="TV">TV/Monitors</option>
-                                <option value="PC">PC</option>
-                                <option value="GA">Gaming/Console</option>
-                                <option value="PH">Phones</option>
+                                <option selected="">Pilih Pembayaran</option>
+                                <option value="Qris">Qris</option>
+                                <option value="Bank">Bank</option>
+                                <option value="Dana">Dana</option>
+                                <option value="Gopay">Gopay</option>
+                                <option value="Cash">Cash</option>
                             </select>
+                            @error('metode_pembayaran')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div>
-                            <label for="price"
+                            <label for="tanggal"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
-                            <input type="number" name="price" id="price"
+                            <input type="date" name="tanggal_pengeluaran" id="tanggal"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="$2999" required="">
+                                placeholder="Tanggal Pengeluaran" required="">
+                            @error('tanggal_pengeluaran')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div>
-                            <label for="category"
+                            <label for="status"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                            <select id="category"
+                            <select id="status" name="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select category</option>
-                                <option value="TV">TV/Monitors</option>
-                                <option value="PC">PC</option>
-                                <option value="GA">Gaming/Console</option>
-                                <option value="PH">Phones</option>
+                                <option selected="">Select status</option>
+                                <option value="draft">Draft</option>
+                                <option value="approved">Approved</option>
+                                <option value="paid">Paid</option>                                
                             </select>
+                            @error('status')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="sm:col-span-2">
                             <label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                            <textarea id="description" rows="4"
+                            <textarea id="description" rows="4" name="description"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Write product description here"></textarea>
+                                placeholder="Deskripsi pengeluaran"></textarea>
+                            @error('description')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <button type="submit"

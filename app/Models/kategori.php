@@ -9,4 +9,9 @@ class kategori extends Model
 {
     /** @use HasFactory<\Database\Factories\KategoriFactory> */
     use HasFactory;
+
+    public function pengeluaran()
+    {
+        return $this->hasMany(Pengeluaran::class, 'id_kategori');
+    }
 }
