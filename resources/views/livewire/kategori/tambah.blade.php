@@ -20,19 +20,20 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="#">
+                <form action="{{ route('simpan.kategori') }}" method="POST">
+                    @csrf
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
                             <label for="nama"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
-                            <input id="nama" rows="4"
+                            <input id="nama" rows="4" name="nama"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Write product description here">
                         </div>
                         <div class="sm:col-span-2">
                             <label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                            <textarea id="description" rows="4"
+                            <textarea id="description" rows="4" name="deskripsi"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Write product description here"></textarea>
                         </div>
