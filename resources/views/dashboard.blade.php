@@ -9,7 +9,7 @@
                     <div class="p-3 border border-neutral-200 rounded-md bg-secondary">
                         <h1 class="font-bold text-lg">Total Saldo</h1>
                         <p class="font-bold text-2xl mt-3">Rp. 12.000.000</p>
-                        <p class="font-semibold text-sm mt-3 bg-white rounded-2xl px-3 w-fit text-center">7 hari trakhir</p>
+                        <p class="font-semibold text-xs mt-3 bg-white rounded-2xl px-3 w-fit text-center">7 hari trakhir</p>
                         <p class=" text-sm mt-3 ">kenaikan Rp.5.000.000</p>
                     </div>
                     <div class="border border-neutral-200 rounded-md">

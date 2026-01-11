@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('kategoris', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('deskripsi');
+            $table->foreignId('id_user')->constrained('users','id');
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 <flux:dropdown position="bottom" align="start">
     <flux:sidebar.profile
-        {{ $attributes->only('name') }}
+         {{ $attributes->merge() }}
         :initials="auth()->user()->initials()"
         icon:trailing="chevrons-up-down"
         data-test="sidebar-menu-button"
