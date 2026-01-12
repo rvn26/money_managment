@@ -25,6 +25,12 @@
                         ">
                         {{ __('Pengeluaran') }}
                         </flux:sidebar.item>
+                    <flux:sidebar.item icon="home" :href="route('pemasukan')" :current="request()->routeIs('pemasukan')" wire:navigate  class="
+                        !text-white
+                        data-[current]:!text-black
+                        ">
+                        {{ __('pemasukan') }}
+                        </flux:sidebar.item>
                     <flux:sidebar.item icon="home" :href="route('kategori')" :current="request()->routeIs('kategori')" wire:navigate  class="
                         !text-white
                         data-current:text-black!
