@@ -1,7 +1,7 @@
 <div>
     @if (session('message'))
         @livewire('component.notif-success')
-    @elseif($errors->any())
+    @elseif($errors->any() || session('error'))
         @livewire('component.notif-error')
     @endif
     <div>
@@ -68,13 +68,13 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
 
-                            @foreach ($transaksi as $index => $item)
+                            @foreach ($tagihan as $index => $item)
                                 <tr>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         {{ $index + 1 }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        {{ $item->tujuan }}
+                                        {{ $item->nama }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
 
@@ -82,12 +82,12 @@
                                             class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
                                             <span
                                                 class="size-1.5 inline-block rounded-full bg-blue-800 dark:bg-blue-500"></span>
-                                            {{ $item->kategori->nama }}
+                                            {{ $item->kategori_tagihan->nama }}
                                         </span>
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        Rp {{ number_format($item->total, 0, ',', '.') }}
+                                        Rp {{ number_format($item->nominal, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                         <span
@@ -95,20 +95,27 @@
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        @if ($item->status == 'paid' || $item->status == 'approved')
+                                        @if (!$item->jatuh_tempo->endOfDay()->timezone('Asia/Jakarta')->isPast())
+                                            @if ($item->status == 'lunas')
+                                                <span
+                                                    class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->status }}
+                                                </span>
+                                            @elseif($item->status == 'belum_dibayar')
+                                                <span
+                                                    class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">{{ $item->status }}
+                                                </span>
+                                            @endif
+                                        @else
                                             <span
-                                                class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->status }}</span>
-                                        @elseif($item->status == 'draft')
-                                            <span
-                                                class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">{{ $item->status }}
+                                                class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">{{ $item->status }}
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        {{ $item->description }}
+                                        {{ $item->catatan }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        {{ $item->tanggal_pengeluaran->timezone('Asia/Jakarta')->translatedFormat('l, d M Y') }}
+                                        {{ $item->jatuh_tempo->timezone('Asia/Jakarta')->translatedFormat('l, d M Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                         <button type="button"

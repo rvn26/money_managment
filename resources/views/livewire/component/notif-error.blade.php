@@ -12,9 +12,14 @@
 
 
             <p id="hs-toast-error-example-label" class="text-sm text-gray-700 dark:text-neutral-400">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}
-                @endforeach
+                @if (session('error'))
+                    {{ session('error') }}
+                @else
+                    @foreach ($errors->all() as $error)
+                        {{ $error }}
+                    @endforeach
+                @endif
+
             </p>
         </div>
     </div>

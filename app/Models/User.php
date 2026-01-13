@@ -70,4 +70,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(pemasukan::class, 'id_user');
     }
+    public function tagihan()
+    {
+        return $this->hasMany(tagihan::class, 'id_user');
+    }
 }

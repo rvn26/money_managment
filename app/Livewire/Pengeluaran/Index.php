@@ -3,6 +3,7 @@
 namespace App\Livewire\Pengeluaran;
 
 use App\Models\pengeluaran;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -30,8 +31,10 @@ class Index extends Component
         return view('livewire.pengeluaran.index', [
             // Contoh di Laravel (Eager Loading)
             'transaksi' => $this->cari === null ?
-                pengeluaran::with(['user', 'kategori'])->latest()->paginate(10) :
-                pengeluaran::with(['user', 'kategori'])->when($this->cari, function ($query) {
+                pengeluaran::with(['user', 'kategori'])->where('id_user',Auth::user()->id)->latest()->paginate(10) :
+                pengeluaran::with(['user', 'kategori'])
+                ->where('id_user',Auth::user()->id)
+                ->when($this->cari, function ($query) {
                     $query->where(function ($q) {
                         $q->where('tujuan', 'like', '%' . $this->cari . '%')
                             ->orWhere('tanggal_pengeluaran', 'like', '%' . $this->cari . '%')
