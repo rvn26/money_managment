@@ -2,16 +2,44 @@
     'sidebar' => false,
 ])
 
-@if($sidebar)
-    <flux:sidebar.brand name="Laravel Starter Kit" class="text-white" {{ $attributes }}>
-        <x-slot name="logo" class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
-            <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
+@php
+    // Warna biru toska sesuai gambar
+    $logoContainerClasses = 'flex aspect-square size-10 items-center justify-center rounded-lg bg-zinc-900';
+@endphp
+
+@if ($sidebar)
+    {{-- Menggunakan !text-white untuk memaksa warna putih (Important) --}}
+    <flux:sidebar.brand class="!text-white !font-bold !leading-tight" {{ $attributes }}>
+        <x-slot name="logo" class="{{ $logoContainerClasses }}">
+            <x-app-logo-icon class="size-7 fill-current text-white" />
+
+        </x-slot>
+        <x-slot name="name">
+                Aplikasi<br>Tuan Crab
         </x-slot>
     </flux:sidebar.brand>
 @else
-    <flux:brand name="Laravel Starter Kit" {{ $attributes }}>
-        <x-slot name="logo" class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
-            <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
+    {{-- Tambahkan !text-white juga di sini jika diperlukan --}}
+    <flux:brand name="Aplikasi Tuan Crab" class="!text-white" {{ $attributes }}>
+        <x-slot name="logo" class="{{ $logoContainerClasses }}">
+            <x-app-logo-icon class="size-7 fill-current text-white" />
         </x-slot>
+        Aplikasi<br>Tuan Crab
     </flux:brand>
 @endif
+
+<style>
+    /* Jika !text-white masih gagal, gunakan CSS murni ini untuk menembus shadow DOM komponen */
+    [data-flux-sidebar-brand] div,
+    [data-flux-brand] div {
+        color: white !important;
+        font-size: 14px !important;
+        /* Ukuran font disesuaikan agar pas 2 baris */
+        font-weight: 700 !important;
+        /* Membuat Bold */
+        line-height: 1.2 !important;
+        /* Mengatur jarak antar baris agar rapat */
+        white-space: pre-line;
+        /* Memungkinkan penggunaan baris baru */
+    }
+</style>

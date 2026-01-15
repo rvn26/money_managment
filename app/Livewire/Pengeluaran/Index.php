@@ -26,6 +26,11 @@ class Index extends Component
     {
         $this->dispatch('tampilTambah');
     }
+    public function edit($id)
+    {
+        $this->dispatch('editPengeluaran',$id);
+    }
+
     public function render()
     {
         return view('livewire.pengeluaran.index', [

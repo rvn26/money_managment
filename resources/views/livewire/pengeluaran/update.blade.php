@@ -21,17 +21,21 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="{{ route('simpan.pengeluaran') }}" method="POST">
+                <form action="{{ route('pengeluaran.edit', ['id' => $id]) }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label for="name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
                             <select id="name" name="id_kategori"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Pilih Kategori</option>
+                                <option selected value="{{ $pengeluaran->id_kategori }}">
+                                    {{ $pengeluaran->kategori->nama }}</option>
                                 @foreach ($kategori as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @if ($pengeluaran->id_kategori != $item->id)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @endif
                                 @endforeach
                                 @error('id_kategori')
                                     <span class="text-red-500">{{ $message }}</span>
@@ -43,7 +47,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tujuan</label>
                             <input type="text" name="tujuan" id="tujuan"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="masukan tujuan" required="">
+                                placeholder="masukan tujuan" required="" value="{{ $pengeluaran->tujuan }}">
                             @error('tujuan')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
@@ -53,7 +57,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total</label>
                             <input type="number" name="total" id="total"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Total pengeluaran" required="">
+                                placeholder="Total pengeluaran" required="" value="{{ $pengeluaran->total }}">
                             @error('total')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
@@ -64,23 +68,28 @@
                                 Pembayaran</label>
                             <select id="category" name="metode_pembayaran"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Pilih Pembayaran</option>
-                                <option value="Qris">Qris</option>
-                                <option value="Bank">Bank</option>
-                                <option value="Dana">Dana</option>
-                                <option value="Gopay">Gopay</option>
-                                <option value="Cash">Cash</option>
+
+                                <option selected="" value="{{ $pengeluaran->metode_pembayaran }}">
+                                    {{ $pengeluaran->metode_pembayaran }}</option>
+
+                                @foreach ($pembayaran as $item)
+                                    @if ($pengeluaran->metode_pembayaran != $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endif
+                                @endforeach
                             </select>
                             @error('metode_pembayaran')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
+
                         <div>
                             <label for="tanggal"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
                             <input type="date" name="tanggal_pengeluaran" id="tanggal"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Tanggal Pengeluaran" required="">
+                                placeholder="Tanggal Pengeluaran" required=""
+                                value="{{ $pengeluaran->tanggal_pengeluaran->timezone('Asia/Jakarta')->format('Y-m-d') }}">
                             @error('tanggal_pengeluaran')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
@@ -90,10 +99,13 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                             <select id="status" name="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select status</option>
-                                <option value="draft">Draft</option>
-                                <option value="approved">Approved</option>
-                                <option value="paid">Paid</option>
+                                <option selected="" value="{{ $pengeluaran->status }}">{{ $pengeluaran->status }}
+                                </option>
+                                @foreach ($status as $s)
+                                    @if ($pengeluaran->status != $s)
+                                        <option value="{{ $s }}">{{ $s }}</option>
+                                    @endif
+                                @endforeach
                             </select>
                             @error('status')
                                 <span class="text-red-500">{{ $message }}</span>
@@ -104,7 +116,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
                             <textarea id="description" rows="4" name="description"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Deskripsi pengeluaran"></textarea>
+                                placeholder="Deskripsi pengeluaran" value="{{ $pengeluaran->description }}">{{ $pengeluaran->description }}</textarea>
                             @error('description')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
@@ -113,13 +125,12 @@
                     <div class="flex justify-end">
                         <button type="submit"
                             class="text-white inline-flex items-center bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary">
-                            <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clip-rule="evenodd"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                             </svg>
-                            Simpan Pengeluaran
+                            Simpan Edit
                         </button>
                     </div>
                 </form>

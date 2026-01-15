@@ -5,7 +5,7 @@
         @livewire('component.notif-error')
     @endif
     <div>
-        <h1 class="text-2xl font-bold ">Pengeluaran</h1>
+        <h1 class="text-2xl font-bold">Pengeluaran</h1>
     </div>
     <div class="py-3 pt-5 flex justify-between">
         <div class="w-xs relative">
