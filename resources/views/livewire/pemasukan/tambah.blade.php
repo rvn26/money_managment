@@ -25,101 +25,103 @@
                     @csrf
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         {{-- <div class="sm:col-span-2"> --}}
-                            <div>
-                                <label for="tanggal"
-                                    class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
-                                <input type="date" name="tanggal" id="tanggal"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tanggal Pengeluaran" required="">
-                                @error('tanggal')
-                                    <span class="text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-
-                            <div>
-                                <label for="total"
-                                    class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">Total</label>
-                                <input type="number" name="total" id="total"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Total pengeluaran" required="">
-                                @error('total')
-                                    <span class="text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <div class="grid gap-4 mb-4 sm:grid-cols-3">
-                                <div>
-                                    <label for="name"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
-                                    <select id="name" name="jenis"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Pilih Kategori</option>
-                                        <option value="gaji">Gaji</option>
-                                        <option value="bonus">Bonus</option>
-                                        <option value="penjualan">Penjualan</option>
-                                        <option value="investasi">Investasi</option>
-                                        <option value="lain-lain">Lain-lain</option>
-                                        @error('jenis')
-                                            <span class="text-red-500">{{ $message }}</span>
-                                        @enderror
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="category"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metode
-                                        Pembayaran</label>
-                                    <select id="category" name="metode_pembayaran"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Pilih Pembayaran</option>
-                                        <option value="Qris">Qris</option>
-                                        <option value="Bank">Bank</option>
-                                        <option value="Dana">Dana</option>
-                                        <option value="Gopay">Gopay</option>
-                                        <option value="Cash">Cash</option>
-                                    </select>
-                                    @error('metode_pembayaran')
-                                        <span class="text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <label for="status"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                                    <select id="status" name="status"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Select status</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="lunas">Lunas</option>
-                                    </select>
-                                    @error('status')
-                                        <span class="text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sm:col-span-2 mb-4">
-                            <label for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                            <textarea id="description" rows="3" name="deskripsi"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Deskripsi pengeluaran"></textarea>
-                            @error('deskripsi')
+                        <div>
+                            <label for="tanggal"
+                                class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
+                            <input type="date" name="tanggal" id="tanggal"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Tanggal Pemasukan" required="">
+                            @error('tanggal')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
+
+
+                        <div>
+                            <label for="total"
+                                class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">Total</label>
+                            <input type="number" name="total" id="total"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Total Pemasukan" required="">
+                            @error('total')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="grid gap-4 mb-4 sm:grid-cols-3">
+                            <div>
+                                <label for="name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
+                                <select id="name" name="jenis"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Pilih Kategori</option>
+                                    <option value="gaji">Gaji</option>
+                                    <option value="bonus">Bonus</option>
+                                    <option value="penjualan">Penjualan</option>
+                                    <option value="investasi">Investasi</option>
+                                    <option value="lain-lain">Lain-lain</option>
+                                    @error('jenis')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </select>
+                            </div>
+                            <div>
+                                <label for="category"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metode
+                                    Pembayaran</label>
+                                <select id="category" name="metode_pembayaran"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Pilih Pembayaran</option>
+                                    <option value="Qris">Qris</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="Dana">Dana</option>
+                                    <option value="Gopay">Gopay</option>
+                                    <option value="Cash">Cash</option>
+                                </select>
+                                @error('metode_pembayaran')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="status"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                <select id="status" name="status"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Select status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="lunas">Lunas</option>
+                                </select>
+                                @error('status')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2 mb-4">
+                        <label for="description"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
+                        <textarea id="description" rows="3" name="deskripsi"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Deskripsi Pemasukan"></textarea>
+                        @error('deskripsi')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
                     {{-- </div> --}}
-                    <button type="submit"
-                        class="text-white inline-flex items-center bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary">
-                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        Tambah pengeluaran
-                    </button>
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="text-white inline-flex items-center bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary">
+                            <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
                 </form>
             </div>
 

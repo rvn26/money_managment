@@ -31,5 +31,6 @@ Route::middleware(['auth'])->group(function (){
 
     Route::get('/pemasukan',[PemasukanController::class,'show'])->name('pemasukan');
     Route::post('/pemasukan/simpan',[PemasukanController::class,'simpan'])->name('simpan.pemasukan');
+    Route::put('/pemasukan/{id}',[PemasukanController::class,'edit'])->name('edit.pemasukan');
 });
 require __DIR__.'/settings.php';
