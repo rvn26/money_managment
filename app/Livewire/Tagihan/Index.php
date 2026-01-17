@@ -4,6 +4,7 @@ namespace App\Livewire\Tagihan;
 
 use App\Models\tagihan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Index extends Component
@@ -23,8 +24,14 @@ class Index extends Component
         // dd("hello");
         $this->dispatch('tambahTagihan');
     }
+    public function edit($id)
+    {
+        // dd("hello");
+        $this->dispatch('editTagihan', $id);
+    }
     public function render()
     {
+        DB::statement("SET lc_time_names = 'id_ID'");
         return view('livewire.tagihan.index', [
             'tagihan' => $this->cari === null ?
                 tagihan::with(['user'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
@@ -33,7 +40,7 @@ class Index extends Component
                 ->when($this->cari, function ($query) {
                     $query->where(function ($q) {
                         $q->where('kategori', 'like', '%' . $this->cari . '%')
-                            ->orWhere('tanggal', 'like', '%' . $this->cari . '%')
+                            ->orWhere('jatuh_tempo', 'like', '%' . $this->cari . '%')
                             ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%W') LIKE ?", ["%{$this->cari}%"])
                             ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%M') LIKE ?", ["%{$this->cari}%"]);
                     });

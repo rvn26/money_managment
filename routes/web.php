@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/kategori/tagihan/tambah',[KategoriTagihanController::class,'simpan'])->name('simpan.kategori.tagihan');
     Route::get('/tagihan',[TagihanController::class,'show'])->name('tagihan');
     Route::post('/tagihan/simpan',[TagihanController::class, 'simpan'])->name('simpan.tagihan');
+    Route::put('/tagihan/{id}',[TagihanController::class, 'edit'])->name('edit.tagihan');
 
     Route::get('/pengeluaran',[PengeluaranController::class,'show'])->name('pengeluaran');
     Route::post('/pengeluaran/simpan',[PengeluaranController::class,'simpan'])->name('simpan.pengeluaran');

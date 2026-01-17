@@ -4,6 +4,7 @@ namespace App\Livewire\Pengeluaran;
 
 use App\Models\kategori;
 use App\Models\pengeluaran;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Update extends Component
@@ -28,7 +29,7 @@ class Update extends Component
     public function mount()
     {
         
-        $this->kategori = kategori::all();
+        $this->kategori = kategori::where('id_user', Auth::user()->id)->get();
         $this->pembayaran =['Qris', 'Bank', 'Dana' ,'Gopay', 'Cash'];
         $this->status =['draft', 'approved', 'paid'];
         // dd($this->kategori);

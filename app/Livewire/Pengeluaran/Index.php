@@ -4,6 +4,7 @@ namespace App\Livewire\Pengeluaran;
 
 use App\Models\pengeluaran;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,17 +29,18 @@ class Index extends Component
     }
     public function edit($id)
     {
-        $this->dispatch('editPengeluaran',$id);
+        $this->dispatch('editPengeluaran', $id);
     }
 
     public function render()
     {
+        DB::statement("SET lc_time_names = 'id_ID'");
         return view('livewire.pengeluaran.index', [
             // Contoh di Laravel (Eager Loading)
             'transaksi' => $this->cari === null ?
-                pengeluaran::with(['user', 'kategori'])->where('id_user',Auth::user()->id)->latest()->paginate(10) :
+                pengeluaran::with(['user', 'kategori'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
                 pengeluaran::with(['user', 'kategori'])
-                ->where('id_user',Auth::user()->id)
+                ->where('id_user', Auth::user()->id)
                 ->when($this->cari, function ($query) {
                     $query->where(function ($q) {
                         $q->where('tujuan', 'like', '%' . $this->cari . '%')

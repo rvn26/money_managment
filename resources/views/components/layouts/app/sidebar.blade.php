@@ -10,7 +10,7 @@
         class="border-e  border-zinc-200 bg-primary  dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.header>
             <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate class="text-white!" />
-            
+
             <flux:sidebar.collapse class="lg:hidden" />
         </flux:sidebar.header>
 
@@ -142,8 +142,29 @@
     </flux:header>
 
     {{ $slot }}
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 
     @fluxScripts
+    @stack('scripts')
+    <script>
+        // Fungsi inisialisasi agar bisa dipanggil berulang
+        function initAOS() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                });
+            }
+        }
+
+        // Jalankan saat navigasi Livewire (wire:navigate)
+        document.addEventListener('livewire:navigated', initAOS);
+
+        // Jalankan saat pemuatan halaman tradisional (refresh/login pertama kali)
+        document.addEventListener('DOMContentLoaded', initAOS);
+    </script>
+
 </body>
 
 </html>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Tagihan;
 
 use App\Models\kategori_tagihan;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Tambah extends Component
@@ -26,7 +27,7 @@ class Tambah extends Component
 
     public function mount()
     {
-        $this->kategori = kategori_tagihan::all();
+        $this->kategori = kategori_tagihan::where('id_user', Auth::user()->id)->get();
         // dd($this->kategori);
     }
     public function render()
