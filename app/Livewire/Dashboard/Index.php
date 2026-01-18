@@ -42,7 +42,8 @@ class Index extends Component
             ->sum('total');
         $this->batasHarian = batas_harian::where('id_user', Auth::user()->id)->first();
         // dd($this->totalTerpakai);
-        $this->persentase = $this->batasHarian->batas > 0 ? min(($this->totalTerpakai / $this->batasHarian->batas) * 100, 100) : 0;
+        $batas = $this->batasHarian ? $this->batasHarian->batas : 0;
+        $this->persentase = $batas > 0 ? min(($this->totalTerpakai / $batas) * 100, 100) : 0;
     }
     public function render()
     {
