@@ -24,12 +24,71 @@
                         </div>
 
                     </div>
-                    <div
-                        class="hidden sm:block border border-dashed border-neutral-300 rounded-xl bg-neutral-50 dark:bg-zinc-800/50">
+                    <div id="isiapa?" class=" border border-neutral-300 rounded-xl bg-neutral-50 dark:bg-zinc-800/50">
+                        <div class="p-3 h-full flex flex-col gap-3">
+                            <div
+                                class="flex items-center justify-between bg-milk/30 p-2 rounded-xl border border-mustard/20 h-full">
+                                <div class="flex items-center gap-2">
+                                    <div class="p-1.5 bg-mustard rounded-lg shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-charcoal"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-neutral-400 uppercase leading-none">Aman
+                                            Hari Ini</p>
+                                        <p class="text-md font-black text-charcoal dark:text-white">Rp. 150.000</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="w-12 h-1 flex bg-neutral-200 rounded-full overflow-hidden">
+                                        <div class="bg-third h-full" style="width: 65%"></div>
+                                    </div>
+                                    <p class="text-[9px] text-neutral-500 mt-1 font-medium italic">Sudah terpakai <br> Rp. 60.000</p>
+                                </div>
+
+                            </div>
+
+                            {{-- Filter --}}
+                            <div class="grid grid-cols-2 gap-2">
+                                <button
+                                    class="flex items-center justify-center gap-2 py-2 rounded-xl bg-primary text-white hover:bg-neutral-800 transition shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span class="text-[10px] font-bold uppercase">Laporan</span>
+                                </button>
+
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-neutral-500"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                        </svg>
+                                    </div>
+
+                                    <select
+                                        class="block w-full pl-9 pr-3 py-2 text-[10px] font-bold uppercase bg-transparent border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-mustard/50 hover:bg-neutral-50 dark:text-white dark:hover:bg-zinc-700 transition cursor-pointer">
+                                        <option value="">Semua Filter</option>
+                                        <option value="pemasukan">Pemasukan</option>
+                                        <option value="pengeluaran">Pengeluaran</option>
+                                        <option value="tagihan">Tagihan</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
+                    <div
+                        class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="flex justify-between items-center mb-2">
                             <h1 class=" font-medium">Pemasukan</h1>
                             <div class="p-1.5 bg-secondary rounded-lg">
@@ -95,9 +154,8 @@
                 @livewire('component.balance-cart')
             </div>
             <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+                class="p-2 flex flex-col gap-2 flex-1 w-full h-full relative  shadow-md overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                @livewire('component.kategori-cart')
             </div>
         </div>
         <div

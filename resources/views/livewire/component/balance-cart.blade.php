@@ -1,118 +1,126 @@
 <div>
     <div class="w-full bg-neutral-primary-soft border border-default rounded-base shadow-xs p-4 md:p-6">
-        <div class="flex justify-between mb-4 md:mb-6">
-            <h1 class="font-bold text-xl">Transaksi</h1>
+        <div class="flex justify-between mb-2 md:mb-2">
+            <div class="grid gap-4 grid-cols-2">
+               <h1 class="font-bold text-xl">transakasi</h1>
+            </div>
         </div>
-        <div id="line-chart"></div>
+        <div wire:ignore>
+            <div id="chart" ></div>
+        </div>
     </div>
-    @push('scripts')
-        <script>
-            // Get the CSS variable --color-brand and convert it to hex for ApexCharts
-            const getBrandColor = () => {
-                // Get the computed style of the document's root element
-                const computedStyle = getComputedStyle(document.documentElement);
+    <script>
+        function destroyChart() {
+            if (window.pendapatanChart && typeof window.pendapatanChart.destroy === 'function') {
+                window.pendapatanChart.destroy();
+                window.pendapatanChart = null;
+            }
+        }
 
-                // Get the value of the --color-brand CSS variable
-                return computedStyle.getPropertyValue('--color-fg-brand').trim() || "#FFB800";
+        function initPendapatanChart(incomingData = null) {
+            const el = document.querySelector('#chart');
+            if (!el) return;
+
+            if (el.offsetWidth === 0) {
+                requestAnimationFrame(() => initPendapatanChart(incomingData));
+                return;
+            }
+
+            destroyChart();
+
+            // DATA DUMMY: Simulasi data 7 hari terakhir
+            const dummyData = {
+                categories: [
+                    new Date().setDate(new Date().getDate() - 3),
+                    new Date().setDate(new Date().getDate() - 2),
+                    new Date().setDate(new Date().getDate() - 1),
+                    new Date().getTime()
+                ],
+                pengeluaran: [1200000, 1500000, 900000, 2100000],
+                pemasukan: [800000, 1100000, 1400000, 1200000]
             };
 
-            const getBrandSecondaryColor = () => {
-                const computedStyle = getComputedStyle(document.documentElement);
-                return computedStyle.getPropertyValue('--color-fg-brand-subtle').trim() || "#F26119";
-            };
+            // Gunakan incomingData jika ada (dari Livewire), jika tidak gunakan dummyData
+            const data = incomingData || dummyData;
 
-            const brandColor = getBrandColor();
-            const brandSecondaryColor = getBrandSecondaryColor();
-
-            const options = {
-                chart: {
-                    height: "100%",
-                    maxWidth: "100%",
-                    type: "line",
-                    fontFamily: "Inter, sans-serif",
-                    dropShadow: {
-                        enabled: false,
-                    },
-                    toolbar: {
-                        show: false,
-                    },
-                },
-                tooltip: {
-                    enabled: true,
-                    x: {
-                        show: false,
-                    },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    width: 6,
-                },
-                grid: {
-                    show: true,
-                    strokeDashArray: 4,
-                    padding: {
-                        left: 2,
-                        right: 2,
-                        top: -26
-                    },
-                },
+            window.pendapatanChart = new ApexCharts(el, {
+                // Menggunakan warna dari palet Anda (Mustard & Tangerine atau Green dari kode awal)
+                // Di sini saya sesuaikan dengan kode awal Anda: Hijau Tua & Hijau Muda
+                colors: ['#FFB800', '#F26119'],
                 series: [{
-                        name: "Clicks",
-                        data: [6500, 6418],
-                        color: brandColor,
+                        name: 'pengeluaran',
+                        data: data.pengeluaran
                     },
                     {
-                        name: "CPC",
-                        data: [6456, 6356],
-                        color: brandSecondaryColor,
-                    },
+                        name: 'pemasukan',
+                        data: data.pemasukan
+                    }
                 ],
-                legend: {
-                    show: false
+                chart: {
+                    toolbar: {
+                        show: false
+                    },
+                    type: 'area',
+                    height: 250,
+                    width: '100%',
+                    animations: {
+                        enabled: true
+                    },
+                    redrawOnParentResize: true
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.1,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: false
                 },
                 stroke: {
-                    curve: 'smooth'
+                    curve: 'smooth',
+                    width: 5
                 },
                 xaxis: {
-                    categories: ['01 Feb', '02 Feb', '03 Feb', '04 Feb', '05 Feb', '06 Feb', '07 Feb'],
+                    type: 'datetime',
+                    categories: data.categories,
                     labels: {
-                        show: true,
                         style: {
-                            fontFamily: "Inter, sans-serif",
-                            cssClass: 'text-xs font-normal fill-body'
+                            colors: '#9ca3af'
                         }
-                    },
-                    axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
+                    }
                 },
                 yaxis: {
-                    show: true,
                     labels: {
-                        show: true,
                         style: {
-                            colors: '#9ca3af',
-                            fontSize: '12px',
+                            colors: '#9ca3af'
                         },
-                        // Formatter agar angka besar (jutaan) lebih rapi
                         formatter: function(value) {
-                            if (value >= 1000000) return (value / 1000000).toFixed(1) + "jt";
-                            if (value >= 1000) return (value / 1000) + "rb";
-                            return value;
+                            return "Rp " + (value / 1000000).toFixed(1) + "jt";
                         }
-                    },
+                    }
                 },
-            }
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy'
+                    },
+                    y: {
+                        formatter: function(value) {
+                            return "Rp " + value.toLocaleString('id-ID');
+                        }
+                    }
+                }
+            });
 
-            if (document.getElementById("line-chart") && typeof ApexCharts !== 'undefined') {
-                const chart = new ApexCharts(document.getElementById("line-chart"), options);
-                chart.render();
-            }
-        </script>
-    @endpush
+            window.pendapatanChart.render();
+        }
+
+        document.addEventListener('livewire:navigated', () => initPendapatanChart());
+        window.addEventListener('update-chart', (event) => initPendapatanChart(event.detail.data));
+        document.addEventListener('livewire:navigating', () => destroyChart());
+    </script>
+
 </div>
