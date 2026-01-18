@@ -1,4 +1,9 @@
 <div>
+    @if (session('message'))
+        @livewire('component.notif-success')
+    @elseif($errors->any())
+        @livewire('component.notif-error')
+    @endif
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div
@@ -24,44 +29,80 @@
                         </div>
 
                     </div>
-                    <div id="isiapa?" class=" border border-neutral-300 rounded-xl bg-neutral-50 dark:bg-zinc-800/50">
+                    <div id="isiapa?"
+                        class="border  border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="p-3 h-full flex flex-col gap-3">
-                            <div
-                                class="flex items-center justify-between bg-milk/30 p-2 rounded-xl border border-mustard/20 h-full">
-                                <div class="flex items-center gap-2">
-                                    <div class="p-1.5 bg-mustard rounded-lg shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-charcoal"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                                clip-rule="evenodd" />
-                                        </svg>
+                            @if ($batasHarian)
+                            @php
+                                $warnaBar = $persentase >= 90 ? 'bg-red-500' : 'bg-third';
+                            @endphp
+                                <div
+                                    class="flex items-center justify-between bg-milk/30 p-2 rounded-xl border border-mustard/20 h-full">
+                                    <div class="flex items-center gap-2">
+                                        <div class="p-1.5 bg-mustard rounded-lg shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-charcoal"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <a wire:click.prevent="tampilsetbatas" class="cursor-pointer ">
+                                            <div>
+                                                <p
+                                                    class="text-[10px] font-bold text-neutral-400 uppercase leading-none">
+                                                    Aman
+                                                    Hari Ini</p>
+                                                <p class="text-md font-black text-charcoal dark:text-white">Rp. {{ number_format($batasHarian->batas,0,',','.') }}
+                                                </p>
+                                            </div>
+                                        </a>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-bold text-neutral-400 uppercase leading-none">Aman
-                                            Hari Ini</p>
-                                        <p class="text-md font-black text-charcoal dark:text-white">Rp. 150.000</p>
+                                        
+                                        <div class="w-12 h-1 flex bg-neutral-200 rounded-full overflow-hidden">
+                                            <div class="{{ $warnaBar }} h-full" style="width: {{ $persentase }}%"></div>
+                                        </div>
+                                        <p class="text-[9px] text-neutral-500 mt-1 font-medium italic">Sudah terpakai
+                                            <br>
+                                            Rp. {{ number_format($totalTerpakai, 0, ',', '.') }}
+                                        </p>
                                     </div>
-                                </div>
-                                <div>
-                                    <div class="w-12 h-1 flex bg-neutral-200 rounded-full overflow-hidden">
-                                        <div class="bg-third h-full" style="width: 65%"></div>
-                                    </div>
-                                    <p class="text-[9px] text-neutral-500 mt-1 font-medium italic">Sudah terpakai <br> Rp. 60.000</p>
-                                </div>
 
-                            </div>
+                                </div>
+                            @else
+                                <a wire:click.prevent="tampilsetbatas" class="cursor-pointer group">
+                                    <div
+                                        class="flex items-center gap-3 bg-neutral-100 dark:bg-neutral-800 border-2 border-dashed border-neutral-300 dark:border-neutral-700 p-2 rounded-xl h-full hover:border-mustard transition-colors">
+                                        <div
+                                            class="p-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg group-hover:bg-mustard transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="size-4 text-neutral-500 group-hover:text-charcoal" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] font-bold text-neutral-400 uppercase leading-none">
+                                                Batas Belum Set</p>
+                                            <p class="text-xs font-medium text-neutral-500">Klik untuk mengatur</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endif
+
 
                             {{-- Filter --}}
                             <div class="grid grid-cols-2 gap-2">
                                 <button
-                                    class="flex items-center justify-center gap-2 py-2 rounded-xl bg-primary text-white hover:bg-neutral-800 transition shadow-sm">
+                                    class="flex items-center justify-center gap-2 py-2 rounded-xl bg-primary text-white hover:bg-neutral-800 transition shadow-sm dark:bg-accent-content dark:text-accent-foreground dark:hover:bg-amber-50">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <span class="text-[10px] font-bold uppercase">Laporan</span>
+                                    <span class="text-[12px] font-bold uppercase">Laporan</span>
                                 </button>
 
                                 <div class="relative w-full">
@@ -76,9 +117,10 @@
                                     <select
                                         class="block w-full pl-9 pr-3 py-2 text-[10px] font-bold uppercase bg-transparent border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-mustard/50 hover:bg-neutral-50 dark:text-white dark:hover:bg-zinc-700 transition cursor-pointer">
                                         <option value="">Semua Filter</option>
-                                        <option value="pemasukan">Pemasukan</option>
-                                        <option value="pengeluaran">Pengeluaran</option>
-                                        <option value="tagihan">Tagihan</option>
+                                        <option value="pemasukan">7 hari</option>
+                                        <option value="pengeluaran">30 hari</option>
+                                        <option value="tagihan">Bulan ini</option>
+                                        <option value="tagihan">Tahun ini</option>
                                     </select>
                                 </div>
                             </div>
@@ -91,9 +133,9 @@
                         class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="flex justify-between items-center mb-2">
                             <h1 class=" font-medium">Pemasukan</h1>
-                            <div class="p-1.5 bg-secondary rounded-lg">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-primary" fill="none"
+                            <div class="p-1.5 bg-green-200 rounded-lg">
+                                <a wire:click.prevent="TambahPemasukan" class="cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-600" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
@@ -101,31 +143,35 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800">Rp. 8.500.000</p>
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp. 8.500.000</p>
                         <p class="text-[10px] text-green-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
-                    <div class="border p-3  border-neutral-200 rounded-md">
+                    <div
+                        class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="flex justify-between items-start">
                             <h1 class=" font-medium">Pengeluaran</h1>
-                            <div class="p-1.5 bg-secondary rounded-lg">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-primary" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="p-1.5 bg-red-200 rounded-lg">
+                                <a wire:click.prevent="TambahPengeluaran" class="cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-red-600"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800">Rp. 8.500.000</p>
-                        <p class="text-[10px] text-green-600 font-medium mt-1">+12% dari bln lalu</p>
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white
+                        ">Rp.
+                            8.500.000</p>
+                        <p class="text-[10px] text-red-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
-                    <div class="border p-3  border-neutral-200 rounded-md">
+                    <div
+                        class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="flex justify-between items-start">
                             <h1 class=" font-medium">Tagihan</h1>
-                            <div class="p-1.5 bg-secondary rounded-lg">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-primary" fill="none"
+                            <div class="p-1.5 bg-secondary/50 rounded-lg">
+                                <a wire:click.prevent="TambahTagihan" class="cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-third" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
@@ -133,8 +179,8 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800">Rp. 8.500.000</p>
-                        <p class="text-[10px] text-green-600 font-medium mt-1">+12% dari bln lalu</p>
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp. 8.500.000</p>
+                        <p class="text-[10px] text-yellow-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
                 </div>
 

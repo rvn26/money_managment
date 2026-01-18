@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BatasHarianController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
@@ -33,5 +34,8 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/pemasukan',[PemasukanController::class,'show'])->name('pemasukan');
     Route::post('/pemasukan/simpan',[PemasukanController::class,'simpan'])->name('simpan.pemasukan');
     Route::put('/pemasukan/{id}',[PemasukanController::class,'edit'])->name('edit.pemasukan');
+
+    Route::post('/batas/simpan',[BatasHarianController::class,'simpan'])->name('simpan.batas');
+    Route::put('/batas/{id}',[BatasHarianController::class,'edit'])->name('edit.batas');
 });
 require __DIR__.'/settings.php';
