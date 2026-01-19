@@ -16,14 +16,33 @@
                         <p class="font-bold text-2xl mt-3">Rp. {{ number_format($totalSaldo, 0, ',', '.') }}</p>
                         <div class="flex flex-wrap items-center gap-2 mt-4">
                             <span class="font-semibold text-[10px] bg-white text-primary rounded-full px-3 py-1">
-                                7 hari terakhir
+                                @if ($filter == '7_hari' || $filter == '30_hari')
+                                    {{ str_replace('_', ' ', $filter) }} terakhir
+                                @elseif($filter == 'bulan_ini' || $filter == 'tahun_ini' || $filter == 'hari_ini')
+                                    1 {{ str_replace('_ini', ' ', $filter) }} terakhir
+                                @endif
+
                             </span>
                             <p class="text-xs flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="size-3">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-                                </svg>
+                                @if ($selisih > 0)
+                                    <span class="p-1 bg-green-200 rounded-lg text-green-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" class="size-3">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                                        </svg>
+                                    </span>
+                                @else
+                                    <span class="p-1 bg-red-200 rounded-lg text-red-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-3">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+                                        </svg>
+
+                                    </span>
+                                @endif
+
                                 Rp. {{ number_format($selisih, 0, ',', '.') }}
                             </p>
                         </div>
@@ -33,9 +52,9 @@
                         class="border  border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
                         <div class="p-3 h-full flex flex-col gap-3">
                             @if ($batasHarian)
-                            @php
-                                $warnaBar = $persentase >= 90 ? 'bg-red-500' : 'bg-third';
-                            @endphp
+                                @php
+                                    $warnaBar = $persentase >= 90 ? 'bg-red-500' : 'bg-third';
+                                @endphp
                                 <div
                                     class="flex items-center justify-between bg-milk/30 p-2 rounded-xl border border-mustard/20 h-full">
                                     <div class="flex items-center gap-2">
@@ -53,15 +72,17 @@
                                                     class="text-[10px] font-bold text-neutral-400 uppercase leading-none">
                                                     Aman
                                                     Hari Ini</p>
-                                                <p class="text-md font-black text-charcoal dark:text-white">Rp. {{ number_format($batasHarian->batas,0,',','.') }}
+                                                <p class="text-md font-black text-charcoal dark:text-white">Rp.
+                                                    {{ number_format($batasHarian->batas, 0, ',', '.') }}
                                                 </p>
                                             </div>
                                         </a>
                                     </div>
                                     <div>
-                                        
+
                                         <div class="w-12 h-1 flex bg-neutral-200 rounded-full overflow-hidden">
-                                            <div class="{{ $warnaBar }} h-full" style="width: {{ $persentase }}%"></div>
+                                            <div class="{{ $warnaBar }} h-full" style="width: {{ $persentase }}%">
+                                            </div>
                                         </div>
                                         <p class="text-[9px] text-neutral-500 mt-1 font-medium italic">Sudah terpakai
                                             <br>
@@ -114,13 +135,14 @@
                                         </svg>
                                     </div>
 
-                                    <select
+                                    <select wire:model.live="filter"
                                         class="block w-full pl-9 pr-3 py-2 text-[10px] font-bold uppercase bg-transparent border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-mustard/50 hover:bg-neutral-50 dark:text-white dark:hover:bg-zinc-700 transition cursor-pointer">
-                                        <option value="">Semua Filter</option>
-                                        <option value="pemasukan">7 hari</option>
-                                        <option value="pengeluaran">30 hari</option>
-                                        <option value="tagihan">Bulan ini</option>
-                                        <option value="tagihan">Tahun ini</option>
+                                        <option value="bulan_ini">Filter</option>
+                                        <option value="hari_ini">hari ini</option>
+                                        <option value="7_hari">7 hari</option>
+                                        <option value="30_hari">30 hari</option>
+                                        <option value="bulan_ini">Bulan ini</option>
+                                        <option value="tahun_ini">Tahun ini</option>
                                     </select>
                                 </div>
                             </div>
@@ -135,15 +157,16 @@
                             <h1 class=" font-medium">Pemasukan</h1>
                             <div class="p-1.5 bg-green-200 rounded-lg">
                                 <a wire:click.prevent="TambahPemasukan" class="cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-600" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-600"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp. 8.500.000</p>
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp.
+                            {{ number_format($totalPemasukan, 0, ',', '.') }}</p>
                         <p class="text-[10px] text-green-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
                     <div
@@ -162,7 +185,7 @@
                         </div>
                         <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white
                         ">Rp.
-                            8.500.000</p>
+                            {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
                         <p class="text-[10px] text-red-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
                     <div
@@ -179,7 +202,8 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp. 8.500.000</p>
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp.
+                            {{ number_format($totalTagihan, 0, ',', '.') }}</p>
                         <p class="text-[10px] text-yellow-600 font-medium mt-1">+12% dari bln lalu</p>
                     </div>
                 </div>
