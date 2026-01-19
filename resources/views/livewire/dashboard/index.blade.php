@@ -216,9 +216,9 @@
                 @livewire('component.tabel-tagihan-dashboard')
             </div>
         </div>
-        <div class="grid auto-rows-min gap-4 md:grid-cols-2">
+        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div
-                class="p-2 flex flex-col gap-2 flex-1 w-full h-full relative  shadow-md overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                class="p-2 flex flex-col gap-2 col-span-2 flex-1 w-full h-full relative  shadow-md overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
                 {{-- <x-placeholder-pattern
                     class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" /> --}}
                 @livewire('component.balance-cart')

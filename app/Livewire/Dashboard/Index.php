@@ -39,17 +39,17 @@ class Index extends Component
         $this->dispatch('tambahTagihan');
     }
     public function filterData()
-    {
+    {   
         $queryPengeluaran = pengeluaran::where('id_user', Auth::user()->id);
         $queryPemasukan = pemasukan::where('id_user', Auth::user()->id);
         $queryPengeluaranlama = pengeluaran::where('id_user', Auth::user()->id);
         $queryPemasukanlama = pemasukan::where('id_user', Auth::user()->id);
         switch ($this->filter) {
             case 'hari_ini':
-                $queryPengeluaran->whereDate('tanggal_pengeluaran', '>=', Carbon::now()->startOfDay());
-                $queryPemasukan->whereDate('tanggal', '>=', Carbon::now()->startOfDay());
-                $queryPengeluaranlama->whereDate('tanggal_pengeluaran', '<', Carbon::now()->startOfDay());
-                $queryPemasukanlama->whereDate('tanggal', '<', Carbon::now()->startOfDay());
+                $queryPengeluaran->whereDate('tanggal_pengeluaran', Carbon::today());
+                $queryPemasukan->whereDate('tanggal', Carbon::today());
+                $queryPengeluaranlama->whereDate('tanggal_pengeluaran', '<', Carbon::today());
+                $queryPemasukanlama->whereDate('tanggal', '<', Carbon::today());
                 break;
             case '7_hari':
                 $queryPengeluaran->whereDate('tanggal_pengeluaran', '>=', Carbon::now()->subDays(7));
@@ -85,8 +85,9 @@ class Index extends Component
         $totalPengeluaranlama = $queryPengeluaranlama->sum('total');
         $totalPemasukanlama = $queryPemasukanlama->sum('total');
         $saldoLama = $totalPemasukanlama -  $totalPengeluaranlama;
-        // dd($saldoLama);
+        // dd($this->totalPengeluaran);
         $this->selisih = $this->totalSaldo - $saldoLama;
+        $this->dispatch('datafilter',$this->filter);
     }
 
     public function getTotalSaldo()

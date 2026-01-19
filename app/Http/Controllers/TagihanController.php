@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pengeluaran;
 use App\Models\tagihan;
 use Carbon\Carbon;
 use Exception;
@@ -38,7 +39,7 @@ class TagihanController extends Controller
             $tagihan->nominal = $request->nominal;
             $tagihan->jatuh_tempo = $request->jatuh_tempo;
             // dd(Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast());
-            if (Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast()) {
+            if (Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast() && $request->status == 'belum_dibayar') {
                 $tagihan->status = 'terlambat';
             } else {
                 $tagihan->status = $request->status; // atau status default lainnya
@@ -47,6 +48,18 @@ class TagihanController extends Controller
             $tagihan->pengulangan = $request->pengulangan;
             $tagihan->catatan = $request->catatan;
             $tagihan->save();
+            if ($request->status == 'lunas') {
+                $pengeluaran = new pengeluaran;
+                $pengeluaran->id_user = Auth::user()->id;
+                $pengeluaran->id_kategori = null;
+                $pengeluaran->total = $request->nominal;
+                $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
+                $pengeluaran->description = $request->catatan;
+                $pengeluaran->tujuan = $request->nama;
+                $pengeluaran->metode_pembayaran = $request->metode_pembayaran;
+                $pengeluaran->status = 'paid';
+                $pengeluaran->save();
+            }
             return redirect()->back()->with('message', 'Tagihan berhasil ditambahkan');
         } catch (Exception $e) {
             Log::error('Gagal simpan pengeluaran: ' . $e->getMessage());
@@ -77,7 +90,7 @@ class TagihanController extends Controller
             $tagihan->nominal = $request->nominal;
             $tagihan->jatuh_tempo = $request->jatuh_tempo;
             // dd(Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast());
-            if (Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast() && $request->status == 'belum_dibayar' ) {
+            if (Carbon::parse($request->jatuh_tempo)->timezone('Asia/Jakarta')->endOfDay()->isPast() && $request->status == 'belum_dibayar') {
                 $tagihan->status = 'terlambat';
             } else {
                 $tagihan->status = $request->status; // atau status default lainnya
@@ -86,6 +99,20 @@ class TagihanController extends Controller
             $tagihan->pengulangan = $request->pengulangan;
             $tagihan->catatan = $request->catatan;
             $tagihan->save();
+
+            if ($request->status == 'lunas') {
+                $pengeluaran = new pengeluaran;
+                $pengeluaran->id_user = Auth::user()->id;
+                $pengeluaran->id_kategori = null;
+                $pengeluaran->total = $request->nominal;
+                $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
+                $pengeluaran->description = $request->catatan;
+                $pengeluaran->tujuan = $request->nama;
+                $pengeluaran->metode_pembayaran = $request->metode_pembayaran;
+                $pengeluaran->status = 'paid';
+                $pengeluaran->save();
+            }
+
             return redirect()->back()->with('message', 'Tagihan berhasil diedit');
         } catch (Exception $e) {
             Log::error('Gagal edit Tagihan: ' . $e->getMessage());

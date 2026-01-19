@@ -1,6 +1,6 @@
 <div>
     <div class="w-full bg-neutral-primary-soft border border-default rounded-base shadow-xs p-4 md:p-6">
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-center w-full text-center mb-2">
             <h1 class="font-bold text-xl text-charcoal">Pengeluaran per Kategori</h1>
         </div>
         <div wire:ignore>
@@ -63,21 +63,50 @@
                 plotOptions: {
                     pie: {
                         donut: {
-                            size: '50%',
+                            size: '60%',
                             labels: {
                                 show: true,
                                 total: {
                                     show: true,
                                     label: 'Total',
+                                    fontSize: '14px',
+                                    fontFamily: 'Instrument Sans, sans-serif',
+                                    fontWeight: 500,
+                                    color: '#9ca3af',
                                     formatter: function(w) {
                                         const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                                        return "Rp " + (total / 1000000).toFixed(1) + "jt";
+                                        // Logika dinamis: Juta vs Ribu
+                                        if (total >= 1000000) {
+                                            return "Rp " + (total / 1000000).toFixed(1).replace('.0', '') +
+                                                "jt";
+                                        } else if (total >= 1000) {
+                                            return "Rp " + (total / 1000).toFixed(0) + "rb";
+                                        } else {
+                                            return "Rp " + total;
+                                        }
                                     }
-                                }
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '20px', // Ukuran angka lebih besar
+                                    fontFamily: 'Instrument Sans, sans-serif',
+                                    fontWeight: 700, // Lebih tebal (bold)
+                                    color: '#111827', // Warna Charcoal (text-gray-900)
+                                    offsetY: 5,
+                                    // Jarak vertikal angka dari label "Total"
+                                },
+                                name: {
+                                    show: true,
+                                    fontSize: '12px',
+                                    fontWeight: 400,
+                                    color: '#6b7280',
+                                    offsetY: -10 // Menaikkan posisi label "Total" agar tidak menempel angka
+                                },
                             }
                         }
                     }
                 },
+
                 dataLabels: {
                     enabled: true,
                     formatter: function(val) {
@@ -99,9 +128,19 @@
                     }
                 },
                 stroke: {
-                    show: false 
+                    show: false
                 }
             });
+
+            function formatRibuan(value) {
+                if (value >= 1000000) {
+                    return "Rp " + (value / 1000000).toFixed(1).replace('.0', '') + "jt";
+                } else if (value >= 1000) {
+                    return "Rp " + (value / 1000).toFixed(0) + "rb";
+                } else {
+                    return "Rp " + value;
+                }
+            }
 
             window.categoryChart.render();
         }

@@ -6,11 +6,14 @@
                     class="border border-gray-200 rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
                     <div class=" flex justify-between py-3 px-4">
                         <div class="relative max-w-xs">
-                            <h1 class="font-bold">Tagihan Terdekat</h1>
+                            <h1 class="font-bold text-xl">Tagihan Terdekat</h1>
                         </div>
-                        <a href="{{ route('tagihan') }}"  class="bg-primary rounded-2xl py-1 px-2 text-white font-semibold  text-xs shadow-md whitespace-nowrap">
-                            Lihat Semua
-                        </a>
+                        <div class="flex gap-2">
+                            <a href="{{ route('tagihan') }}"
+                                class="bg-primary rounded-2xl py-2 px-2.5 text-white font-medium  text-xs shadow-md whitespace-nowrap">
+                                Lihat Semua
+                            </a>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
@@ -41,7 +44,7 @@
                                             {{ $item->nama }}</td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            Rp. {{ number_format($item->nominal,0,',','.') }}</td>
+                                            Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                             {{ $item->jatuh_tempo->timezone('Asia/Jakarta')->translatedFormat('l, d M Y') }}

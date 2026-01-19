@@ -1,12 +1,12 @@
 <div>
     <div class="w-full bg-neutral-primary-soft border border-default rounded-base shadow-xs p-4 md:p-6">
         <div class="flex justify-between mb-2 md:mb-2">
-            <div class="grid gap-4 grid-cols-2">
-               <h1 class="font-bold text-xl">transakasi</h1>
+            <div class="flex justify-center w-full text-center">
+                <h1 class="font-bold text-xl">Pemasukan dan Pengeluaran</h1>
             </div>
         </div>
         <div wire:ignore>
-            <div id="chart" ></div>
+            <div id="chart"></div>
         </div>
     </div>
     <script>
@@ -29,31 +29,30 @@
             destroyChart();
 
             // DATA DUMMY: Simulasi data 7 hari terakhir
-            const dummyData = {
-                categories: [
-                    new Date().setDate(new Date().getDate() - 3),
-                    new Date().setDate(new Date().getDate() - 2),
-                    new Date().setDate(new Date().getDate() - 1),
-                    new Date().getTime()
-                ],
-                pengeluaran: [1200000, 1500000, 900000, 2100000],
-                pemasukan: [800000, 1100000, 1400000, 1200000]
-            };
+            // const dummyData = {
+            //     categories: [
+            //         new Date().setDate(new Date().getDate() - 3),
+            //         new Date().setDate(new Date().getDate() - 2),
+            //         new Date().setDate(new Date().getDate() - 1),
+            //         new Date().getTime()
+            //     ],
+            //     pengeluaran: [1200000, 1500000, 900000, 2100000],
+            //     pemasukan: [800000, 1100000, 1400000, 1200000]
+            // };
+            const data = incomingData || @json($chartData ?? ['categories' => [], 'pemasukan' => [], 'pengeluaran' => []]);
 
-            // Gunakan incomingData jika ada (dari Livewire), jika tidak gunakan dummyData
-            const data = incomingData || dummyData;
+
+            // const data = incomingData || dummyData;
 
             window.pendapatanChart = new ApexCharts(el, {
-                // Menggunakan warna dari palet Anda (Mustard & Tangerine atau Green dari kode awal)
-                // Di sini saya sesuaikan dengan kode awal Anda: Hijau Tua & Hijau Muda
                 colors: ['#FFB800', '#F26119'],
                 series: [{
                         name: 'pengeluaran',
-                        data: data.pengeluaran
+                        data: data.pengeluaran || []
                     },
                     {
                         name: 'pemasukan',
-                        data: data.pemasukan
+                        data: data.pemasukan || []
                     }
                 ],
                 chart: {
@@ -99,7 +98,15 @@
                             colors: '#9ca3af'
                         },
                         formatter: function(value) {
-                            return "Rp " + (value / 1000000).toFixed(1) + "jt";
+                            if (value >= 1000000) {
+                                // Jika 1 juta
+                                return "Rp " + (value / 1000000).toFixed(1).replace('.0', '') + "jt";
+                            } else if (value >= 1000) {
+                                // Jika ratusan ribu
+                                return "Rp " + (value / 1000).toFixed(0) + "rb";
+                            } else {
+                                return "Rp " + value;
+                            }
                         }
                     }
                 },
@@ -112,6 +119,9 @@
                             return "Rp " + value.toLocaleString('id-ID');
                         }
                     }
+                },
+                noData: {
+                    text: 'Tidak Ada Data...'
                 }
             });
 
@@ -119,7 +129,7 @@
         }
 
         document.addEventListener('livewire:navigated', () => initPendapatanChart());
-        window.addEventListener('update-chart', (event) => initPendapatanChart(event.detail.data));
+        window.addEventListener('updateChart', (event) => initPendapatanChart(event.detail.data));
         document.addEventListener('livewire:navigating', () => destroyChart());
     </script>
 
