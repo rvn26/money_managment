@@ -29,6 +29,11 @@ class Index extends Component
         // dd("hello");
         $this->dispatch('editTagihan', $id);
     }
+    public function hapus($id)
+    {
+        // dd("hello");
+        $this->dispatch('hapusTagihan', $id);
+    }
     public function render()
     {
         DB::statement("SET lc_time_names = 'id_ID'");

@@ -56,7 +56,7 @@
                                     $warnaBar = $persentase >= 90 ? 'bg-red-500' : 'bg-third';
                                 @endphp
                                 <div
-                                    class="flex items-center justify-between bg-milk/30 p-2 rounded-xl border border-mustard/20 h-full">
+                                    class="flex items-center justify-between bg-gray-50 p-2 shadow-md dark:bg-zinc-900 rounded-xl border border-mustard/20 h-full">
                                     <div class="flex items-center gap-2">
                                         <div class="p-1.5 bg-mustard rounded-lg shrink-0">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-charcoal"
@@ -69,7 +69,7 @@
                                         <a wire:click.prevent="tampilsetbatas" class="cursor-pointer ">
                                             <div>
                                                 <p
-                                                    class="text-[10px] font-bold text-neutral-400 uppercase leading-none">
+                                                    class="text-[10px] font-bold text-neutral-400 dark:text-accent-content uppercase leading-none">
                                                     Aman
                                                     Hari Ini</p>
                                                 <p class="text-md font-black text-charcoal dark:text-white">Rp.
@@ -116,7 +116,7 @@
 
                             {{-- Filter --}}
                             <div class="grid grid-cols-2 gap-2">
-                                <button
+                                <button wire:click.prevent="laporan"
                                     class="flex items-center justify-center gap-2 py-2 rounded-xl bg-primary text-white hover:bg-neutral-800 transition shadow-sm dark:bg-accent-content dark:text-accent-foreground dark:hover:bg-amber-50">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -167,7 +167,27 @@
                         </div>
                         <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp.
                             {{ number_format($totalPemasukan, 0, ',', '.') }}</p>
-                        <p class="text-[10px] text-green-600 font-medium mt-1">+12% dari bln lalu</p>
+                        @if ($persentasePemasukan >= 0)
+                            <p class="text-[10px] text-green-600 font-medium mt-1">
+                                +{{ number_format($persentasePemasukan, 1) }}% dari
+                                @if ($filter == '7_hari' || $filter == '30_hari')
+                                    {{ str_replace('_', ' ', $filter) }}
+                                @elseif($filter == 'bulan_ini' || $filter == 'tahun_ini' || $filter == 'hari_ini')
+                                    {{ str_replace('_ini', ' ', $filter) }}
+                                @endif
+                                lalu
+                            </p>
+                        @else
+                            <p class="text-[10px] text-red-600 font-medium mt-1">
+                                {{ number_format($persentasePemasukan, 1) }}% dari
+                                @if ($filter == '7_hari' || $filter == '30_hari')
+                                    {{ str_replace('_', ' ', $filter) }}
+                                @elseif($filter == 'bulan_ini' || $filter == 'tahun_ini' || $filter == 'hari_ini')
+                                    {{ str_replace('_ini', ' ', $filter) }}
+                                @endif
+                                lalu
+                            </p>
+                        @endif
                     </div>
                     <div
                         class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
@@ -183,10 +203,36 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white
-                        ">Rp.
+                        <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp.
                             {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
-                        <p class="text-[10px] text-red-600 font-medium mt-1">+12% dari bln lalu</p>
+                        @if ($persentasePengeluaran > 0)
+                            {{-- Pengeluaran Naik --}}
+                            <p class="text-[10px] text-red-600 font-medium mt-1">
+                                +{{ number_format($persentasePengeluaran, 1) }}% dari
+                                @if ($filter == '7_hari' || $filter == '30_hari')
+                                    {{ str_replace('_', ' ', $filter) }}
+                                @elseif($filter == 'bulan_ini' || $filter == 'tahun_ini' || $filter == 'hari_ini')
+                                    {{ str_replace('_ini', ' ', $filter) }}
+                                @endif
+                                lalu
+                            </p>
+                        @elseif ($persentasePengeluaran < 0)
+                            {{-- Pengeluaran Turun --}}
+                            <p class="text-[10px] text-green-600 font-medium mt-1">
+                                {{ number_format($persentasePengeluaran, 1) }}% dari
+                                @if ($filter == '7_hari' || $filter == '30_hari')
+                                    {{ str_replace('_', ' ', $filter) }}
+                                @elseif($filter == 'bulan_ini' || $filter == 'tahun_ini' || $filter == 'hari_ini')
+                                    {{ str_replace('_ini', ' ', $filter) }}
+                                @endif
+                                lalu
+                            </p>
+                        @else
+                            {{-- Tetap / Tidak ada data --}}
+                            <p class="text-[10px] text-gray-500 font-medium mt-1">
+                                0% dari periode lalu
+                            </p>
+                        @endif
                     </div>
                     <div
                         class="border p-3 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-zinc-800">
@@ -204,7 +250,7 @@
                         </div>
                         <p class="font-bold text-lg mt-2 text-neutral-800 dark:text-white">Rp.
                             {{ number_format($totalTagihan, 0, ',', '.') }}</p>
-                        <p class="text-[10px] text-yellow-600 font-medium mt-1">+12% dari bln lalu</p>
+                        <p class="text-[10px] text-yellow-600 font-medium mt-1">{{ $tagihanBelumBayar}} Tagihan belum dibayar</p>
                     </div>
                 </div>
 
@@ -224,7 +270,7 @@
                 @livewire('component.balance-cart')
             </div>
             <div
-                class="p-2 flex flex-col gap-2 flex-1 w-full h-full relative  shadow-md overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                class="p-2 flex flex-col gap-2 flex-1 col-span-1 w-full h-full relative  shadow-md overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
                 @livewire('component.kategori-cart')
             </div>
         </div>

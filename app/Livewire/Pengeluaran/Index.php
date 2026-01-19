@@ -31,6 +31,10 @@ class Index extends Component
     {
         $this->dispatch('editPengeluaran', $id);
     }
+    public function hapus($id)
+    {
+        $this->dispatch('hapusPengeluaran', $id);
+    }
 
     public function render()
     {
@@ -50,7 +54,7 @@ class Index extends Component
                     });
                 })
                 ->latest()
-                ->paginate(10),
+                ->paginate(8),
         ]);
     }
 }

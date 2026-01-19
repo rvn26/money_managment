@@ -129,19 +129,22 @@
                 },
                 stroke: {
                     show: false
+                },
+                noData: {
+                    text: 'Belum Ada Riwayat Pengeluaran',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    offsetX: 0,
+                    offsetY: 0,
+                    style: {
+                        color: '#9ca3af', // Abu-abu lembut (text-gray-400)
+                        fontSize: '16px',
+                        fontFamily: 'Instrument Sans, sans-serif'
+                    }
                 }
             });
 
-            function formatRibuan(value) {
-                if (value >= 1000000) {
-                    return "Rp " + (value / 1000000).toFixed(1).replace('.0', '') + "jt";
-                } else if (value >= 1000) {
-                    return "Rp " + (value / 1000).toFixed(0) + "rb";
-                } else {
-                    return "Rp " + value;
-                }
-            }
-
+           
             window.categoryChart.render();
         }
 

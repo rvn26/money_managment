@@ -121,4 +121,19 @@ class TagihanController extends Controller
                 ->with('error', 'Tagihan gagal diedit');
         }
     }
+
+    public function hapus($id)
+    {
+        try {
+            $tagihan = tagihan::findOrFail($id);
+            $tagihan->delete();
+            return redirect()->back()->with('message', 'Tagihan berhasil dihapus');
+        } catch (Exception $e) {
+            Log::error('Gagal simpan Tagihan: ' . $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->with('message', 'Gagal Menghapus Tagihan, silakan coba lagi');
+        }
+    }
 }

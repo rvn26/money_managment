@@ -121,7 +121,16 @@
                     }
                 },
                 noData: {
-                    text: 'Tidak Ada Data...'
+                    text: 'Belum Ada Riwayat Transaksi',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    offsetX: 0,
+                    offsetY: 0,
+                    style: {
+                        color: '#9ca3af', // Abu-abu lembut (text-gray-400)
+                        fontSize: '16px',
+                        fontFamily: 'Instrument Sans, sans-serif'
+                    }
                 }
             });
 

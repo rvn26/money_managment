@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\kategori;
 use App\Models\pengeluaran;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +40,7 @@ class PengeluaranController extends Controller
             $pengeluaran->status = $request->status;
             $pengeluaran->save();
             return redirect()->back()->with('message', 'pengeluaran berhasil ditambahkan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Gagal simpan pengeluaran: ' . $e->getMessage());
 
             return redirect()
@@ -70,12 +71,27 @@ class PengeluaranController extends Controller
             $pengeluaran->status = $request->status;
             $pengeluaran->save();
             return redirect()->back()->with('message', 'pengeluaran berhasil diedit');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Gagal simpan pengeluaran: ' . $e->getMessage());
 
             return redirect()
                 ->back()
                 ->with('message', 'Gagal mengedit Pengeluaran, silakan coba lagi');
+        }
+    }
+
+    public function hapus($id)
+    {
+        try {
+            $pengeluaran = pengeluaran::findOrFail($id);
+            $pengeluaran->delete();
+            return redirect()->back()->with('message', 'pengeluaran berhasil dihapus');
+        } catch (Exception $e) {
+            Log::error('Gagal simpan pengeluaran: ' . $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->with('message', 'Gagal Menghapus Pengeluaran, silakan coba lagi');
         }
     }
 }

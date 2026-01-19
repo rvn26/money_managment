@@ -31,6 +31,11 @@ class Index extends Component
         // dd("hello");
         $this->dispatch('editpemasukan',$id);
     }
+    public function hapus($id)
+    {
+        // dd("hello");
+        $this->dispatch('hapusPemasukan',$id);
+    }
 
     public function render()
     {
