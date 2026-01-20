@@ -18,12 +18,12 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function (){
+Route::middleware(['auth','verified'])->group(function (){
     Route::get('/kategori',[KategoriController::class,'show'])->name('kategori');
     Route::get('/kategori/tagihan',[KategoriTagihanController::class,'show'])->name('kategori.tagihan');
     Route::post('/kategori/tambah',[KategoriController::class,'simpan'])->name('simpan.kategori');
     Route::post('/kategori/tagihan/tambah',[KategoriTagihanController::class,'simpan'])->name('simpan.kategori.tagihan');
-    
+
     Route::get('/tagihan',[TagihanController::class,'show'])->name('tagihan');
     Route::post('/tagihan/simpan',[TagihanController::class, 'simpan'])->name('simpan.tagihan');
     Route::put('/tagihan/{id}',[TagihanController::class, 'edit'])->name('edit.tagihan');

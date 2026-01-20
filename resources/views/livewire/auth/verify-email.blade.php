@@ -1,12 +1,12 @@
 <x-layouts.auth>
-    <div class="mt-4 flex flex-col gap-6">
+    <div class="mt-4 flex flex-col gap-6  p-5 rounded-xl shadow-md">
         <flux:text class="text-center">
-            {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
+            {{ __('Sebelum mulai menjaga keseimbangan uang, tolong verifikasi emailmu dulu ya! Kami sudah kirim link-nya ke emailmu.') }}
         </flux:text>
 
         @if (session('status') == 'verification-link-sent')
             <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                {{ __('Link sudah dikirimkan ulang silahkan cek emailmu') }}
             </flux:text>
         @endif
 
@@ -14,7 +14,7 @@
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
                 <flux:button type="submit" variant="primary" class="w-full">
-                    {{ __('Resend verification email') }}
+                    {{ __('Kirim Ulang Email Verifikasi') }}
                 </flux:button>
             </form>
 

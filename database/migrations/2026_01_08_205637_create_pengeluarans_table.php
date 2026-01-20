@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pengeluarans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users','id');
-            $table->foreignId('id_kategori')->constrained('kategoris','id');
+            $table->foreignId('id_user')->constrained('users','id')->cascadeOnDelete();
+            $table->foreignId('id_kategori')->constrained('kategoris','id')->cascadeOnDelete();
             $table->date('tanggal_penggeluaran');
             $table->decimal('total', 15, 2);
             $table->text('description');

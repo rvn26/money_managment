@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pemasukans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users', 'id');
+            $table->foreignId('id_user')->constrained('users', 'id')->cascadeOnDelete();
             $table->date('tanggal');
             $table->enum('jenis', ['gaji', 'bonus', 'penjualan', 'investasi', 'lain-lain'])->default('gaji');
             $table->decimal('total', 15, 2);

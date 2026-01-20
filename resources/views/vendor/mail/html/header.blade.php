@@ -1,0 +1,12 @@
+@props(['url'])
+<tr>
+    <td class="header">
+        <a href="{{ $url }}" style="display: inline-block;">
+            @if (trim($slot) === 'Kepitink')
+                <img src="{{ asset('asset/logo2.png') }}" class="logo" alt="Kepitink Logo">
+            @else
+                {!! $slot !!}
+            @endif
+        </a>
+    </td>
+</tr>
