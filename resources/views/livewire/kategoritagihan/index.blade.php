@@ -25,7 +25,7 @@
         </div>
         <div>
             <div class="flex-shrink-0">
-                <button wire:click="tampilTambah"
+                <button wire:click="tambahTampil"
                     class="bg-primary rounded-2xl py-2 px-3 text-white font-semibold text-sm shadow-md">
                     + Tambah
                 </button>
