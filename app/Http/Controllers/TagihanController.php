@@ -133,7 +133,7 @@ class TagihanController extends Controller
 
             return redirect()
                 ->back()
-                ->with('message', 'Gagal Menghapus Tagihan, silakan coba lagi');
+                ->with('error', 'Gagal Menghapus Tagihan, silakan coba lagi');
         }
     }
 }

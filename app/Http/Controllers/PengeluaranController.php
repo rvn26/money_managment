@@ -45,7 +45,7 @@ class PengeluaranController extends Controller
 
             return redirect()
                 ->back()
-                ->with('message', 'Gagal menyimpan kategori, silakan coba lagi');
+                ->with('error', 'Gagal menyimpan kategori, silakan coba lagi');
         }
     }
     public function edit(Request $request, $id)
@@ -76,7 +76,7 @@ class PengeluaranController extends Controller
 
             return redirect()
                 ->back()
-                ->with('message', 'Gagal mengedit Pengeluaran, silakan coba lagi');
+                ->with('error', 'Gagal mengedit Pengeluaran, silakan coba lagi');
         }
     }
 
@@ -91,7 +91,7 @@ class PengeluaranController extends Controller
 
             return redirect()
                 ->back()
-                ->with('message', 'Gagal Menghapus Pengeluaran, silakan coba lagi');
+                ->with('error', 'Gagal Menghapus Pengeluaran, silakan coba lagi');
         }
     }
 }
