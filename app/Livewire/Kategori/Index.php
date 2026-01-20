@@ -11,6 +11,10 @@ class Index extends Component
     public function tambahTampil(){
         $this->dispatch('tampil');
     }
+
+    public function hapus($id){
+        $this->dispatch('hapusKategori', $id);
+    }
     public function render()
     {
         return view('livewire.kategori.index',[

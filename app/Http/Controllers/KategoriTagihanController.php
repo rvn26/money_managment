@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\kategori_tagihan;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class KategoriTagihanController extends Controller
 {
@@ -26,10 +28,24 @@ class KategoriTagihanController extends Controller
             $kategoriTagihan->deskripsi = $request->deskripsi;
             $kategoriTagihan->save();
             return redirect()->back()->with('message', 'Kategori tagihan berhasil ditambahkan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error('Gagal simpan Kategori: ' . $e->getMessage());
             return redirect()
                 ->back()
                 ->with('message', $e->getMessage());
+        }
+    }
+    public function hapus($id)
+    {
+        try {
+            $kategoritagihan = kategori_tagihan::findOrFail($id);
+            $kategoritagihan->delete();
+            return redirect()->back()->with('message', 'Kategori berhasil dihapus');
+        } catch (Exception $e) {
+            Log::error('Gagal hapus Kategori: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal Menghapus Kategori, silakan coba lagi');
         }
     }
 }

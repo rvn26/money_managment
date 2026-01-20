@@ -12,10 +12,15 @@ class Index extends Component
     {
         $this->dispatch('tampil');
     }
+
+    public function hapus($id)
+    {
+        $this->dispatch('hapusKategoritagihan', $id);
+    }
     public function render()
     {
         return view('livewire.kategoritagihan.index', [
-            'kategori' => kategori_tagihan::where('id_user',Auth::user()->id)->get(),
+            'kategori' => kategori_tagihan::where('id_user', Auth::user()->id)->get(),
         ]);
     }
 }

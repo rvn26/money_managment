@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\kategori;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -33,13 +34,27 @@ class KategoriController extends Controller
             //     'redirect_to' => '/produk'
             // ], 201);
             return redirect()->route('kategori')->with('message', 'kategori berhasil ditambahkan');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             Log::error('Gagal simpan kategori: ' . $e->getMessage());
 
             return redirect()
                 ->route('kategori')
                 ->with('message', 'Gagal menyimpan kategori, silakan coba lagi');
+        }
+    }
+
+    public function hapus($id)
+    {
+        try {
+            $kategori = kategori::findOrFail($id);
+            $kategori->delete();
+            return redirect()->back()->with('message', 'Kategori berhasil dihapus');
+        } catch (Exception $e) {
+            Log::error('Gagal simpan Kategori: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal Menghapus Kategori, silakan coba lagi');
         }
     }
 }

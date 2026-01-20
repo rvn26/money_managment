@@ -5,7 +5,7 @@
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Add Product
+                        Tambah Kategori Tagihan
                     </h3>
                     <button type="button" wire:click="$toggle('show')"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -28,14 +28,14 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
                             <input id="nama" rows="4" name="nama"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Write product description here">
+                                placeholder="Nama kategori tagihan kamu">
                         </div>
                         <div class="sm:col-span-2">
                             <label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
                             <textarea id="description" rows="4" name="deskripsi"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Write product description here"></textarea>
+                                placeholder="Deskripsi dari kategori"></textarea>
                         </div>
                     </div>
                     <button type="submit"
@@ -46,7 +46,7 @@
                                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        Add new product
+                        Simpan
                     </button>
                 </form>
             </div>
