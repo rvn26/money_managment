@@ -14,6 +14,19 @@ Route::get('/', function () {
     return view('livewire.auth.login');
 })->name('home');
 
+Route::get('/check-https', fn() => request()->isSecure() ? 'HTTPS' : 'HTTP');
+Route::get('/debug-headers', function () {
+    return response()->json([
+        'is_secure' => request()->isSecure(),
+        'scheme' => request()->getScheme(),
+        'x_forwarded_proto' => request()->header('x-forwarded-proto'),
+        'x_forwarded_ssl' => request()->header('x-forwarded-ssl'),
+        'server_https' => $_SERVER['HTTPS'] ?? null,
+        'server_port' => $_SERVER['SERVER_PORT'] ?? null,
+    ]);
+});
+
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
