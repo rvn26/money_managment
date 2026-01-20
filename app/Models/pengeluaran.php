@@ -36,6 +36,6 @@ class pengeluaran extends Model
     // Relasi ke Kategori
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori');
+        return $this->belongsTo(kategori::class, 'id_kategori');
     }
 }
