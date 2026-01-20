@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Dashboard')">
+<x-layouts.app :title="__('Pengeluaran')">
     @livewire('pengeluaran.hapus')
     @livewire('pengeluaran.update')
     @livewire('pengeluaran.tambah')

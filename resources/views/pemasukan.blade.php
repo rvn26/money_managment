@@ -1,4 +1,4 @@
-<x-layouts.app :tittle="__('Pemasukan')">
+<x-layouts.app :title="__('Pemasukan')">
     @livewire('pemasukan.tambah')
     @livewire('pemasukan.hapus')
     @livewire('pemasukan.update')
