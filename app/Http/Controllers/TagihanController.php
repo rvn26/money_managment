@@ -83,7 +83,7 @@ class TagihanController extends Controller
 
 
         try {
-            $tagihan = tagihan::findOr($id);
+            $tagihan = tagihan::findOrFail($id);
             $tagihan->id_user = Auth::user()->id;
             $tagihan->kategori = $request->id_kategori;
             $tagihan->nama = $request->nama;
@@ -101,16 +101,18 @@ class TagihanController extends Controller
             $tagihan->save();
 
             if ($request->status == 'lunas') {
-                $pengeluaran = new pengeluaran;
-                $pengeluaran->id_user = Auth::user()->id;
-                $pengeluaran->id_kategori = null;
-                $pengeluaran->total = $request->nominal;
-                $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
-                $pengeluaran->description = $request->catatan;
-                $pengeluaran->tujuan = $request->nama;
-                $pengeluaran->metode_pembayaran = $request->metode_pembayaran;
-                $pengeluaran->status = 'paid';
-                $pengeluaran->save();
+                if ($tagihan->getOriginal('status') !== 'lunas') {
+                    $pengeluaran = new pengeluaran;
+                    $pengeluaran->id_user = Auth::user()->id;
+                    $pengeluaran->id_kategori = null;
+                    $pengeluaran->total = $request->nominal;
+                    $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
+                    $pengeluaran->description = $request->catatan;
+                    $pengeluaran->tujuan = $request->nama;
+                    $pengeluaran->metode_pembayaran = $request->metode_pembayaran;
+                    $pengeluaran->status = 'paid';
+                    $pengeluaran->save();
+                }
             }
 
             return redirect()->back()->with('message', 'Tagihan berhasil diedit');
