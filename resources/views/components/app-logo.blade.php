@@ -11,11 +11,15 @@
     {{-- Menggunakan !text-white untuk memaksa warna putih (Important) --}}
     <flux:sidebar.brand class="!text-white !font-bold !leading-tight" {{ $attributes }}>
         <x-slot name="logo" class="{{ $logoContainerClasses }}">
-            <x-app-logo-icon class="size-7 fill-current text-white" />
+
+            <div
+                class="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/20">
+                <x-app-logo-icon class="h-7 fill-current text-neutral-950" />
+            </div>
 
         </x-slot>
         <x-slot name="name">
-                Aplikasi<br>Tuan Crab
+            Aplikasi<br>Tuan Crab
         </x-slot>
     </flux:sidebar.brand>
 @else
