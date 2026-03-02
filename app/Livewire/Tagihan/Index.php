@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Tagihan;
 
-use App\Models\tagihan;
+use App\Models\Tagihan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -39,8 +39,8 @@ class Index extends Component
         DB::statement("SET lc_time_names = 'id_ID'");
         return view('livewire.tagihan.index', [
             'tagihan' => $this->cari === null ?
-                tagihan::with(['user'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
-                tagihan::with(['user'])
+                Tagihan::with(['user'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
+                Tagihan::with(['user'])
                 ->where('id_user', Auth::user()->id)
                 ->when($this->cari, function ($query) {
                     $query->where(function ($q) {

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Pengeluaran;
 
-use App\Models\pengeluaran;
+use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -42,8 +42,8 @@ class Index extends Component
         return view('livewire.pengeluaran.index', [
             // Contoh di Laravel (Eager Loading)
             'transaksi' => $this->cari === null ?
-                pengeluaran::with(['user', 'kategori'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
-                pengeluaran::with(['user', 'kategori'])
+                Pengeluaran::with(['user', 'kategori'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
+                Pengeluaran::with(['user', 'kategori'])
                 ->where('id_user', Auth::user()->id)
                 ->when($this->cari, function ($query) {
                     $query->where(function ($q) {

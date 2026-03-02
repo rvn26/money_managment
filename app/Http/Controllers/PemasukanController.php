@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\pemasukan;
+use App\Models\Pemasukan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,7 @@ class PemasukanController extends Controller
             'deskripsi'         => 'required|string|max:500',
         ]);
         try {
-            $pemasukan = new pemasukan;
+            $pemasukan = new Pemasukan;
             $pemasukan->id_user = Auth::user()->id;
             $pemasukan->tanggal = $request->tanggal;
             $pemasukan->jenis = $request->jenis;
@@ -54,7 +54,7 @@ class PemasukanController extends Controller
             'deskripsi'         => 'required|string|max:500',
         ]);
         try {
-            $pemasukan = pemasukan::findOrFail($id);
+            $pemasukan = Pemasukan::findOrFail($id);
             $pemasukan->id_user = Auth::user()->id;
             $pemasukan->tanggal = $request->tanggal;
             $pemasukan->jenis = $request->jenis;
@@ -75,7 +75,7 @@ class PemasukanController extends Controller
     public function hapus($id)
     {
         try {
-            $pemasukan = pemasukan::findOrFail($id);
+            $pemasukan = Pemasukan::findOrFail($id);
             $pemasukan->delete();
             return redirect()->back()->with('message', 'pemasukan berhasil dihapus');
         } catch (Exception $e) {

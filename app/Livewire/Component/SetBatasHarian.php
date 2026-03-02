@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Component;
 
-use App\Models\batas_harian;
+use App\Models\BatasHarian;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -16,7 +16,7 @@ class SetBatasHarian extends Component
     ];
 
     public function sethendel(){
-        $this->batasHarian = batas_harian::where('id_user',Auth::user()->id)->first();
+        $this->batasHarian = BatasHarian::where('id_user',Auth::user()->id)->first();
         $this->show = true;
     }
 

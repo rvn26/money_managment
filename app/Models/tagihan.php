@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class tagihan extends Model
+class Tagihan extends Model
 {
     /** @use HasFactory<\Database\Factories\TagihanFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'id_user', 'kategori', 'nama', 'nominal', 'jatuh_tempo',
+        'status', 'metode_pembayaran', 'pengulangan', 'catatan',
+    ];
 
     protected $casts = [
         'jatuh_tempo' => 'datetime',
@@ -22,6 +26,6 @@ class tagihan extends Model
     // Relasi ke Kategori
     public function kategori_tagihan()
     {
-        return $this->belongsTo(kategori_tagihan::class, 'kategori');
+        return $this->belongsTo(KategoriTagihan::class, 'kategori');
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\kategori;
-use App\Models\pengeluaran;
+use App\Models\Kategori;
+use App\Models\Pengeluaran;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +13,7 @@ class PengeluaranController extends Controller
 {
     public function show()
     {
-        // $kategori = kategori::all();
+        // $kategori = Kategori::all();
         return view('pengeluaran');
     }
 
@@ -29,7 +29,7 @@ class PengeluaranController extends Controller
             'status'              => 'required|in:draft,approved,paid',
         ]);
         try {
-            $pengeluaran = new pengeluaran;
+            $pengeluaran = new Pengeluaran;
             $pengeluaran->id_user = Auth::user()->id;
             $pengeluaran->id_kategori = $request->id_kategori;
             $pengeluaran->total = $request->total;
@@ -60,7 +60,7 @@ class PengeluaranController extends Controller
             'status'              => 'required|in:draft,approved,paid',
         ]);
         try {
-            $pengeluaran = pengeluaran::findOrFail($id);
+            $pengeluaran = Pengeluaran::findOrFail($id);
             $pengeluaran->id_user = Auth::user()->id;
             $pengeluaran->id_kategori = $request->id_kategori;
             $pengeluaran->total = $request->total;
@@ -83,7 +83,7 @@ class PengeluaranController extends Controller
     public function hapus($id)
     {
         try {
-            $pengeluaran = pengeluaran::findOrFail($id);
+            $pengeluaran = Pengeluaran::findOrFail($id);
             $pengeluaran->delete();
             return redirect()->back()->with('message', 'pengeluaran berhasil dihapus');
         } catch (Exception $e) {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\pengeluaran;
-use App\Models\tagihan;
+use App\Models\Pengeluaran;
+use App\Models\Tagihan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class TagihanController extends Controller
 
 
         try {
-            $tagihan = new tagihan;
+            $tagihan = new Tagihan;
             $tagihan->id_user = Auth::user()->id;
             $tagihan->kategori = $request->id_kategori;
             $tagihan->nama = $request->nama;
@@ -49,7 +49,7 @@ class TagihanController extends Controller
             $tagihan->catatan = $request->catatan;
             $tagihan->save();
             if ($request->status == 'lunas') {
-                $pengeluaran = new pengeluaran;
+                $pengeluaran = new Pengeluaran;
                 $pengeluaran->id_user = Auth::user()->id;
                 $pengeluaran->id_kategori = null;
                 $pengeluaran->total = $request->nominal;
@@ -83,7 +83,7 @@ class TagihanController extends Controller
 
 
         try {
-            $tagihan = tagihan::findOrFail($id);
+            $tagihan = Tagihan::findOrFail($id);
             $tagihan->id_user = Auth::user()->id;
             $tagihan->kategori = $request->id_kategori;
             $tagihan->nama = $request->nama;
@@ -102,7 +102,7 @@ class TagihanController extends Controller
 
             if ($request->status == 'lunas') {
                 if ($tagihan->getOriginal('status') !== 'lunas') {
-                    $pengeluaran = new pengeluaran;
+                    $pengeluaran = new Pengeluaran;
                     $pengeluaran->id_user = Auth::user()->id;
                     $pengeluaran->id_kategori = null;
                     $pengeluaran->total = $request->nominal;
@@ -127,7 +127,7 @@ class TagihanController extends Controller
     public function hapus($id)
     {
         try {
-            $tagihan = tagihan::findOrFail($id);
+            $tagihan = Tagihan::findOrFail($id);
             $tagihan->delete();
             return redirect()->back()->with('message', 'Tagihan berhasil dihapus');
         } catch (Exception $e) {

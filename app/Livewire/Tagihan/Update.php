@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Tagihan;
 
-use App\Models\kategori;
-use App\Models\kategori_tagihan;
-use App\Models\tagihan;
+use App\Models\Kategori;
+use App\Models\KategoriTagihan;
+use App\Models\Tagihan;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -22,13 +22,13 @@ class Update extends Component
     public function edithendel($id)
     {
         $this->id = $id;
-        $this->tagihan = tagihan::find($this->id);
+        $this->tagihan = Tagihan::find($this->id);
         $this->show = true;
     }
 
     public function mount()
     {
-        $this->kategori = kategori_tagihan::where('id_user', Auth::user()->id)->get();
+        $this->kategori = KategoriTagihan::where('id_user', Auth::user()->id)->get();
         // $this->kategori = ['Gaji', 'Bonus', 'Penjualan', 'Investasi', 'Lain-lain'];
         $this->pembayaran = ['Qris', 'Bank', 'Dana', 'Gopay', 'Cash'];
         $this->status = ['Belum_Dibayar', 'Lunas'];

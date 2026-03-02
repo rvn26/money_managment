@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class kategori_tagihan extends Model
+class KategoriTagihan extends Model
 {
     /** @use HasFactory<\Database\Factories\KategoriTagihanFactory> */
     use HasFactory;
+
+    protected $fillable = ['nama', 'deskripsi', 'id_user'];
+
     public function tagihan()
     {
-        return $this->hasMany(tagihan::class, 'id_kategori');
+        return $this->hasMany(Tagihan::class, 'id_kategori');
     }
 }

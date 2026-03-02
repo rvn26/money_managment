@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_user')->constrained('users','id')->cascadeOnDelete();
             $table->foreignId('id_kategori')->constrained('kategoris','id')->cascadeOnDelete();
-            $table->date('tanggal_penggeluaran');
+            $table->date('tanggal_pengeluaran');
             $table->decimal('total', 15, 2);
             $table->text('description');
             $table->string('tujuan')->nullable();

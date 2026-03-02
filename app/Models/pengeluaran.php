@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pengeluaran extends Model
+class Pengeluaran extends Model
 {
     /** @use HasFactory<\Database\Factories\PengeluaranFactory> */
     use HasFactory;
@@ -36,6 +36,6 @@ class pengeluaran extends Model
     // Relasi ke Kategori
     public function kategori()
     {
-        return $this->belongsTo(kategori::class, 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori');
     }
 }

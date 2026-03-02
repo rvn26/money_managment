@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Pemasukan;
 
-use App\Models\pemasukan;
+use App\Models\Pemasukan;
 use Livewire\Component;
 
 class Update extends Component
@@ -17,7 +17,7 @@ class Update extends Component
     public function edithendel($id)
     {
         $this->id = $id;
-        $this->pemasukan = pemasukan::find($this->id);
+        $this->pemasukan = Pemasukan::find($this->id);
         $this->show = true;
     }
 

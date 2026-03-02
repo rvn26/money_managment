@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\batas_harian;
+use App\Models\BatasHarian;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +15,7 @@ class BatasHarianController extends Controller
             'batas' => 'required|numeric|min:0.01',
         ]);
         try {
-            $batasHarian = new batas_harian;
+            $batasHarian = new BatasHarian;
             $batasHarian->id_user = Auth::user()->id;
             $batasHarian->batas = $request->batas;
             $batasHarian->save();
@@ -30,7 +30,7 @@ class BatasHarianController extends Controller
             'batas' => 'required|numeric|min:0.01',
         ]);
         try {
-            $batasHarian = batas_harian::findOrFail($id);
+            $batasHarian = BatasHarian::findOrFail($id);
             $batasHarian->id_user = Auth::user()->id;
             $batasHarian->batas = $request->batas;
             $batasHarian->save();

@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\batas_harian>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BatasHarian>
  */
 class BatasHarianFactory extends Factory
 {

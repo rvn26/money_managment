@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Pengeluaran;
 
-use App\Models\pengeluaran;
+use App\Models\Pengeluaran;
 use Livewire\Component;
 
 class Hapus extends Component

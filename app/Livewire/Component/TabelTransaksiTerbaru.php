@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Component;
 
-use App\Models\pemasukan;
-use App\Models\pengeluaran;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class TabelTransaksiTerbaru extends Component
     public function Mount()
     {
         DB::statement("SET lc_time_names = 'id_ID'");
-        $pemasukan = pemasukan::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
+        $pemasukan = Pemasukan::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
             return [
                 'tanggal_buat'          => $item->created_at,
                 'nama'                  => $item->jenis ?? 'Pemasukan Kas',
@@ -28,7 +28,7 @@ class TabelTransaksiTerbaru extends Component
                 'jenis'                 => 'Pemasukan',
             ];
         });
-        $pengeluaran = pengeluaran::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
+        $pengeluaran = Pengeluaran::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
             return [
                 'tanggal_buat'          => $item->created_at,
                 'nama'                  => $item->tujuan ?? 'pembelian',

@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Pengeluaran;
 
-use App\Models\kategori;
-use App\Models\pengeluaran;
+use App\Models\Kategori;
+use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -29,7 +29,7 @@ class Update extends Component
     public function mount()
     {
         
-        $this->kategori = kategori::where('id_user', Auth::user()->id)->get();
+        $this->kategori = Kategori::where('id_user', Auth::user()->id)->get();
         $this->pembayaran =['Qris', 'Bank', 'Dana' ,'Gopay', 'Cash'];
         $this->status =['draft', 'approved', 'paid'];
         // dd($this->kategori);
@@ -37,7 +37,7 @@ class Update extends Component
     public function render()
     {
         return view('livewire.pengeluaran.update',[
-            'pengeluaran' => pengeluaran::find($this->id),
+            'pengeluaran' => Pengeluaran::find($this->id),
         ]);
     }
 }

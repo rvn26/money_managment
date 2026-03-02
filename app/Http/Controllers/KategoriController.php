@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\kategori;
+use App\Models\Kategori;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,17 +22,13 @@ class KategoriController extends Controller
             'deskripsi' => 'required|max:255',
         ]);
         try {
-            $kategori = new kategori;
+            $kategori = new Kategori;
             $kategori->id_user = Auth::user()->id;
             $kategori->nama = $request->nama;
             $kategori->deskripsi = $request->deskripsi;
             $kategori->save();
 
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => 'Produk berhasil disimpan',
-            //     'redirect_to' => '/produk'
-            // ], 201);
+  
             return redirect()->route('kategori')->with('message', 'kategori berhasil ditambahkan');
         } catch (Exception $e) {
 
@@ -47,7 +43,7 @@ class KategoriController extends Controller
     public function hapus($id)
     {
         try {
-            $kategori = kategori::findOrFail($id);
+            $kategori = Kategori::findOrFail($id);
             $kategori->delete();
             return redirect()->back()->with('message', 'Kategori berhasil dihapus');
         } catch (Exception $e) {

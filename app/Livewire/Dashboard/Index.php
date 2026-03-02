@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Models\batas_harian;
-use App\Models\pemasukan;
-use App\Models\pengeluaran;
-use App\Models\tagihan;
+use App\Models\BatasHarian;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
+use App\Models\Tagihan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -47,13 +47,13 @@ class Index extends Component
     }
     public function filterData()
     {
-        $queryPengeluaran = pengeluaran::where('id_user', Auth::user()->id);
-        $queryPemasukan = pemasukan::where('id_user', Auth::user()->id);
-        $queryPengeluaranlama = pengeluaran::where('id_user', Auth::user()->id);
-        $queryPemasukanlama = pemasukan::where('id_user', Auth::user()->id);
+        $queryPengeluaran = Pengeluaran::where('id_user', Auth::user()->id);
+        $queryPemasukan = Pemasukan::where('id_user', Auth::user()->id);
+        $queryPengeluaranlama = Pengeluaran::where('id_user', Auth::user()->id);
+        $queryPemasukanlama = Pemasukan::where('id_user', Auth::user()->id);
         // untuk persentase
         $queryPemasukanLalu = Pemasukan::where('id_user', Auth::user()->id);
-        $queryPengeluaranLalu = pengeluaran::where('id_user', Auth::user()->id);
+        $queryPengeluaranLalu = Pengeluaran::where('id_user', Auth::user()->id);
         switch ($this->filter) {
             case 'hari_ini':
                 $queryPengeluaran->whereDate('tanggal_pengeluaran', Carbon::today());
@@ -143,9 +143,9 @@ class Index extends Component
 
     public function getTotalSaldo()
     {
-        $Pengeluaran = pengeluaran::where('id_user', Auth::user()->id)->sum('total');
-        $Pemasukan = pemasukan::where('id_user', Auth::user()->id)->sum('total');
-        $this->totalTagihan = tagihan::where('id_user', Auth::user()->id)->sum('nominal');
+        $Pengeluaran = Pengeluaran::where('id_user', Auth::user()->id)->sum('total');
+        $Pemasukan = Pemasukan::where('id_user', Auth::user()->id)->sum('total');
+        $this->totalTagihan = Tagihan::where('id_user', Auth::user()->id)->sum('nominal');
         $this->totalSaldo = $Pemasukan - $Pengeluaran;
     }
 
@@ -160,11 +160,11 @@ class Index extends Component
     {
         $this->getTotalSaldo();
         $this->filterData();
-        $this->totalTerpakai = pengeluaran::where('id_user', Auth::user()->id)
+        $this->totalTerpakai = Pengeluaran::where('id_user', Auth::user()->id)
             ->whereDate('tanggal_pengeluaran', now())
             ->sum('total');
-        $this->batasHarian = batas_harian::where('id_user', Auth::user()->id)->first();
-        $this->tagihanBelumBayar = tagihan::where('id_user', Auth::user()->id)->where('status','belum_dibayar')->count();
+        $this->batasHarian = BatasHarian::where('id_user', Auth::user()->id)->first();
+        $this->tagihanBelumBayar = Tagihan::where('id_user', Auth::user()->id)->where('status','belum_dibayar')->count();
         $batas = $this->batasHarian ? $this->batasHarian->batas : 0;
         $this->persentase = $batas > 0 ? min(($this->totalTerpakai / $batas) * 100, 100) : 0;
     }

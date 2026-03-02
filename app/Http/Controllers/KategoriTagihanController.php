@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\kategori_tagihan;
+use App\Models\KategoriTagihan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +22,7 @@ class KategoriTagihanController extends Controller
             'deskripsi' => 'required|max:255',
         ]);
         try {
-            $kategoriTagihan = new kategori_tagihan;
+            $kategoriTagihan = new KategoriTagihan;
             $kategoriTagihan->id_user = Auth::user()->id;
             $kategoriTagihan->nama = $request->nama;
             $kategoriTagihan->deskripsi = $request->deskripsi;
@@ -38,7 +38,7 @@ class KategoriTagihanController extends Controller
     public function hapus($id)
     {
         try {
-            $kategoritagihan = kategori_tagihan::findOrFail($id);
+            $kategoritagihan = KategoriTagihan::findOrFail($id);
             $kategoritagihan->delete();
             return redirect()->back()->with('message', 'Kategori berhasil dihapus');
         } catch (Exception $e) {

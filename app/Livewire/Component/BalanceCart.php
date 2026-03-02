@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Component;
 
-use App\Models\pemasukan;
-use App\Models\pengeluaran;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -25,10 +25,10 @@ class BalanceCart extends Component
     }
     public function filterData()
     {
-        $queryPengeluaran = pengeluaran::where('id_user', Auth::user()->id);
-        $queryPemasukan = pemasukan::where('id_user', Auth::user()->id);
-        $queryPengeluaranlama = pengeluaran::where('id_user', Auth::user()->id);
-        $queryPemasukanlama = pemasukan::where('id_user', Auth::user()->id);
+        $queryPengeluaran = Pengeluaran::where('id_user', Auth::user()->id);
+        $queryPemasukan = Pemasukan::where('id_user', Auth::user()->id);
+        $queryPengeluaranlama = Pengeluaran::where('id_user', Auth::user()->id);
+        $queryPemasukanlama = Pemasukan::where('id_user', Auth::user()->id);
         switch ($this->filter) {
             case 'hari_ini':
                 $queryPengeluaran->whereDate('tanggal_pengeluaran', Carbon::today());

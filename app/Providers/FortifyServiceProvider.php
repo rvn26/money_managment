@@ -36,7 +36,7 @@ class FortifyServiceProvider extends ServiceProvider
             {
                 // Menuju halaman home dengan membawa session flash
                 return redirect()->intended(config('fortify.home'))
-                    ->with('login_success', 'Selamat Datang, ' . Auth::user()->name. '!');
+                    ->with('login_success', 'Selamat Datang, ' . (Auth::user()?->name ?? 'User') . '!');
             }
         });
     }

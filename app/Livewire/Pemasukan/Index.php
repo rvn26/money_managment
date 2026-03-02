@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Pemasukan;
 
-use App\Models\pemasukan;
-use App\Models\pengeluaran;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -42,8 +42,8 @@ class Index extends Component
         DB::statement("SET lc_time_names = 'id_ID'");
         return view('livewire.pemasukan.index', [
             'transaksi' => $this->cari === null ?
-                pemasukan::with(['user'])->where('id_user',Auth::user()->id)->latest()->paginate(10) :
-                pemasukan::with(['user'])
+                Pemasukan::with(['user'])->where('id_user',Auth::user()->id)->latest()->paginate(10) :
+                Pemasukan::with(['user'])
                 ->where('id_user',Auth::user()->id)
                 ->when($this->cari, function ($query) {
                     $query->where(function ($q) {
