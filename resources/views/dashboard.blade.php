@@ -3,6 +3,7 @@
   @livewire('component.fitur-belum-ada')
   @livewire('pemasukan.tambah')
   @livewire('pengeluaran.tambah')
+  @livewire('pengeluaran.scan')
   @livewire('tagihan.tambah')
   @livewire('component.set-batas-harian')
   @livewire('dashboard.index')

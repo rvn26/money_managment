@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'struk_scan' => [
+        'key' => env('STRUK_SCAN_API_KEY'),
+        'url' => 'https://struk-scan.vercel.app/scan-setruk',
+    ],
+
 ];

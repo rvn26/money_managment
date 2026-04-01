@@ -6,6 +6,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\TagihanController;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,8 @@ Route::get('/debug-headers', function () {
         'server_port' => $_SERVER['SERVER_PORT'] ?? null,
     ]);
 });
-
+Route::get('/test-scan', [ReceiptController::class, 'index']);
+Route::post('/scan-receipt', [ReceiptController::class, 'scanReceipt'])->name('scan.receipt');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

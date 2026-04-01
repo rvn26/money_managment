@@ -15,7 +15,15 @@ class Tambah extends Component
         'tampilTambah' => 'show'
     ];
 
-    public function show(){
+    public function tampilScan()
+    {
+        // dd('tampil scan');
+        $this->show = false;
+        $this->dispatch('tampilScan');
+    }
+
+    public function show()
+    {
         $this->show = true;
     }
 
@@ -24,7 +32,8 @@ class Tambah extends Component
         $this->show = true;
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->kategori = Kategori::where('id_user', Auth::user()->id)->get();
         // dd($this->kategori);
     }

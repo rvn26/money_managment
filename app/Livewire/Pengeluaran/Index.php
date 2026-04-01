@@ -23,6 +23,12 @@ class Index extends Component
         $this->cari = request()->query('search', $this->cari);
     }
 
+    public function tampilScan()
+    {
+        // dd('tampil scan');
+        // $this->show = false;
+        $this->dispatch('tampilScan');
+    }
     public function tampilTambah()
     {
         $this->dispatch('tampilTambah');

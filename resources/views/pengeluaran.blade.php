@@ -3,4 +3,5 @@
     @livewire('pengeluaran.update')
     @livewire('pengeluaran.tambah')
     @livewire('pengeluaran.index')
+    @livewire('pengeluaran.scan')
 </x-layouts.app>

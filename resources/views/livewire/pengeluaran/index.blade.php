@@ -22,7 +22,12 @@
                 </svg>
             </div>
         </div>
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 " >
+
+            <button wire:click="tampilScan"
+                class="bg-primary rounded-2xl py-2 px-3 mr-3 text-white font-semibold md:text-sm text-xs shadow-md whitespace-nowrap">
+                + Scan Struk
+            </button>
             <button wire:click="tampilTambah"
                 class="bg-primary rounded-2xl py-2 px-3 text-white font-semibold md:text-sm text-xs shadow-md whitespace-nowrap">
                 + Tambah
@@ -69,19 +74,19 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
 
                             @foreach ($transaksi as $index => $item)
-                                <tr >
+                                <tr>
                                     {{-- <a wire:click="edit('{{ $item->id }}')" class="cursor-pointer"> --}}
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
 
                                         {{ $transaksi->firstItem() + $index }}</td>
                                     {{-- </a> --}}
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         {{ $item->tujuan }}
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
 
                                         <span
                                             class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
@@ -92,18 +97,18 @@
                                         </span>
 
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         Rp {{ number_format($item->total, 0, ',', '.') }}
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         <span
                                             class="inline-flex items-center gap-x-1.5 py-0.5 px-3  rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->metode_pembayaran }}</span>
 
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         @if ($item->status == 'paid' || $item->status == 'approved')
                                             <span
                                                 class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->status }}</span>
@@ -113,12 +118,12 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         {{ $item->description }}
                                     </td>
-                                    <td
-                                        class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         {{ $item->tanggal_pengeluaran->timezone('Asia/Jakarta')->translatedFormat('l, d M Y') }}
                                     </td>
                                     <td class=" px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
