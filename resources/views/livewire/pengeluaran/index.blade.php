@@ -1,7 +1,7 @@
 <div>
     @if (session('message'))
         @livewire('component.notif-success')
-    @elseif($errors->any())
+    @elseif($errors->any() || session('error'))
         @livewire('component.notif-error')
     @endif
     <div>
@@ -22,16 +22,14 @@
                 </svg>
             </div>
         </div>
-        <div class="flex-shrink-0 " >
+        <div class="shrink-0 flex items-center" >
 
-            <button wire:click="tampilScan"
-                class="bg-primary rounded-2xl py-2 px-3 mr-3 text-white font-semibold md:text-sm text-xs shadow-md whitespace-nowrap">
-                + Scan Struk
-            </button>
-            <button wire:click="tampilTambah"
-                class="bg-primary rounded-2xl py-2 px-3 text-white font-semibold md:text-sm text-xs shadow-md whitespace-nowrap">
-                + Tambah
-            </button>
+            <x-button wire:click="tampilScan" icon="arrow-up-tray" class="mr-3">
+                Scan Struk
+            </x-button>
+            <x-button wire:click="tampilTambah" icon="plus" class="mr-3">
+                Tambah
+            </x-button>
         </div>
     </div>
     <div class="flex flex-col pt-3 overflow-hidden">
@@ -150,9 +148,7 @@
 
                         </tbody>
                     </table>
-                    {{-- <div class="px-6 py-4 border-t border-gray-200 dark:border-neutral-700">
-                        {{ $transaksi->links() }}
-                    </div> --}}
+                    
                 </div>
             </div>
         </div>

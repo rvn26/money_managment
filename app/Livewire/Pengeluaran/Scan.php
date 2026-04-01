@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Pengeluaran;
 
+use App\Models\Kategori;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -10,6 +12,7 @@ class Scan extends Component
     use WithFileUploads;
 
     public $show = false;
+    public $hasKategori = true;
     public $file;
     public $isScanned = false;
     public $scanResult = [];
@@ -20,6 +23,8 @@ class Scan extends Component
 
     public function show()
     {
+        $this->hasKategori = Kategori::where('id_user', Auth::user()->id)->exists();
+        $this->reset(['file', 'isScanned', 'scanResult']);
         $this->show = true;
     }
 

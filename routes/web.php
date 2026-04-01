@@ -8,6 +8,7 @@ use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\TagihanController;
+use App\Livewire\Pengeluaran\HasilScan;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/tagihan/hapus/{id}', [TagihanController::class, 'hapus'])->name('hapus.tagihan');
 
     Route::get('/pengeluaran', [PengeluaranController::class, 'show'])->name('pengeluaran');
+    Route::get('/pengeluaran/hasil-scan', HasilScan::class)->name('pengeluaran.hasil-scan');
+    Route::post('/pengeluaran/hasil-scan/simpan', [PengeluaranController::class, 'simpanHasilScan'])->name('pengeluaran.hasil-scan.simpan');
     Route::post('/pengeluaran/simpan', [PengeluaranController::class, 'simpan'])->name('simpan.pengeluaran');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::delete('/pengeluaran/hapus/{id}', [PengeluaranController::class, 'hapus'])->name('pengeluaran.hapus');
