@@ -10,7 +10,7 @@ class KategoriTagihan extends Model
     /** @use HasFactory<\Database\Factories\KategoriTagihanFactory> */
     use HasFactory;
 
-    protected $fillable = ['nama', 'deskripsi', 'id_user'];
+    protected $fillable = ['nama', 'emoji', 'warna', 'deskripsi', 'id_user'];
 
     public function tagihan()
     {

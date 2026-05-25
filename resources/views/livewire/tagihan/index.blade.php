@@ -78,12 +78,19 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
 
-                                        <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
-                                            <span
-                                                class="size-1.5 inline-block rounded-full bg-blue-800 dark:bg-blue-500"></span>
-                                            {{ $item->kategori_tagihan->nama }}
-                                        </span>
+                                        <div class="inline-flex items-center gap-2">
+                                            @if($item->kategori_tagihan && $item->kategori_tagihan->emoji)
+                                                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                                                    style="background-color: {{ $item->kategori_tagihan->warna ? $item->kategori_tagihan->warna . '20' : '#f3f4f6' }}">
+                                                    {{ $item->kategori_tagihan->emoji }}
+                                                </span>
+                                            @else
+                                                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500">
+                                                    ?
+                                                </span>
+                                            @endif
+                                            <span class="text-sm font-medium">{{ $item->kategori_tagihan->nama }}</span>
+                                        </div>
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">

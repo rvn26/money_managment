@@ -1,25 +1,29 @@
 <div>
     @if ($show)
         @if ($kategori && count($kategori) > 0)
-            <div class="fixed overflow-y-auto inset-0 bg-black/50 z-50 flex items-center justify-center">
-                <div
-                    class="w-full max-w-3xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-zinc-900 dark:border-zinc-700">
+            <div class="fixed overflow-y-auto inset-0 z-50 flex items-center justify-center" x-data="{ open: false }" x-init="$nextTick(() => open = true)">
+                <!-- Backdrop -->
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    wire:click="$toggle('show')"></div>
+
+                <!-- Modal -->
+                <div class="relative w-full max-w-3xl mx-4 p-4 bg-white rounded-2xl shadow-xl sm:p-6 md:p-8 dark:bg-zinc-900"
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-200 delay-50"
+                    x-transition:enter-start="opacity-0 scale-95 translate-y-3"
+                    x-transition:enter-end="opacity-100 scale-100 translate-y-0">
                     <!-- Modal header -->
-                    <div
-                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <div class="flex justify-between items-center pb-4 mb-4 border-b dark:border-gray-600">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                             Tambah Tagihan
                         </h3>
                         <button type="button" wire:click="$toggle('show')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="defaultModal">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
+                            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                            <flux:icon.x-mark class="size-5" />
                         </button>
                     </div>
                     <!-- Modal body -->
@@ -53,7 +57,7 @@
                             <div>
                                 <label for="nominal"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal</label>
-                                <input type="number" name="nominal" id="nominal"
+                                <input type="text" name="nominal" id="nominal" data-autonumeric
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Nominal Tagihan" required="">
                                 @error('nominal')

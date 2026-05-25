@@ -19,20 +19,23 @@ class KategoriController extends Controller
     {
         $request->validate([
             'nama' => 'required|unique:kategoris,nama|max:255',
+            'emoji' => 'nullable|string|max:10',
+            'warna' => 'nullable|string|max:7',
             'deskripsi' => 'required|max:255',
         ]);
         try {
             $kategori = new Kategori;
             $kategori->id_user = Auth::user()->id;
             $kategori->nama = $request->nama;
+            $kategori->emoji = $request->emoji;
+            $kategori->warna = $request->warna;
             $kategori->deskripsi = $request->deskripsi;
             $kategori->save();
 
-  
             return redirect()->route('kategori')->with('message', 'kategori berhasil ditambahkan');
         } catch (Exception $e) {
 
-            Log::error('Gagal simpan kategori: ' . $e->getMessage());
+            Log::error('Gagal simpan kategori: '.$e->getMessage());
 
             return redirect()
                 ->route('kategori')
@@ -45,9 +48,11 @@ class KategoriController extends Controller
         try {
             $kategori = Kategori::findOrFail($id);
             $kategori->delete();
+
             return redirect()->back()->with('message', 'Kategori berhasil dihapus');
         } catch (Exception $e) {
-            Log::error('Gagal simpan Kategori: ' . $e->getMessage());
+            Log::error('Gagal simpan Kategori: '.$e->getMessage());
+
             return redirect()
                 ->back()
                 ->with('error', 'Gagal Menghapus Kategori, silakan coba lagi');

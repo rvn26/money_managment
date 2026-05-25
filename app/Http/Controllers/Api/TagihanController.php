@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kategori;
 use App\Models\KategoriTagihan;
 use App\Models\Pengeluaran;
 use App\Models\Tagihan;
@@ -31,17 +32,18 @@ class TagihanController extends Controller
 
             return response()->json([
                 'statuscode' => 200,
-                'msg'        => 'Data tagihan berhasil diambil.',
-                'data'       => $tagihan->items(),
+                'msg' => 'Data tagihan berhasil diambil.',
+                'data' => $tagihan->items(),
                 'pagination' => [
                     'current_page' => $tagihan->currentPage(),
-                    'last_page'    => $tagihan->lastPage(),
-                    'per_page'     => $tagihan->perPage(),
-                    'total'        => $tagihan->total(),
+                    'last_page' => $tagihan->lastPage(),
+                    'per_page' => $tagihan->perPage(),
+                    'total' => $tagihan->total(),
                 ],
             ], 200);
         } catch (Exception $e) {
-            Log::error('Gagal mengambil tagihan: ' . $e->getMessage());
+            Log::error('Gagal mengambil tagihan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengambil data tagihan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -49,7 +51,7 @@ class TagihanController extends Controller
     /**
      * Get a single tagihan by ID.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -60,13 +62,14 @@ class TagihanController extends Controller
                 ->where('id_user', $user->id)
                 ->find($id);
 
-            if (!$tagihan) {
+            if (! $tagihan) {
                 return $this->sendError('Tagihan tidak ditemukan.', [], 404);
             }
 
             return $this->sendResponse($tagihan, 'Detail tagihan berhasil diambil.');
         } catch (Exception $e) {
-            Log::error('Gagal mengambil detail tagihan: ' . $e->getMessage());
+            Log::error('Gagal mengambil detail tagihan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengambil detail tagihan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -75,20 +78,19 @@ class TagihanController extends Controller
      * Store a new tagihan.
      * Requires id_kategori — user must create kategori tagihan first.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_kategori'       => 'required|exists:kategori_tagihans,id',
-            'nama'              => 'required|min:3',
-            'nominal'           => 'required|numeric|min:1',
-            'jatuh_tempo'       => 'required|date',
-            'status'            => 'required|in:belum_dibayar,lunas,terlambat',
+            'id_kategori' => 'required|exists:kategori_tagihans,id',
+            'nama' => 'required|min:3',
+            'nominal' => 'required|numeric|min:1',
+            'jatuh_tempo' => 'required|date',
+            'status' => 'required|in:belum_dibayar,lunas,terlambat',
             'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'pengulangan'       => 'required|in:sekali_bayar,bulanan,tahunan',
-            'catatan'           => 'required|string|max:500',
+            'pengulangan' => 'required|in:sekali_bayar,bulanan,tahunan',
+            'catatan' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +105,7 @@ class TagihanController extends Controller
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$kategori) {
+            if (! $kategori) {
                 return $this->sendError(
                     'Kategori tidak ditemukan.',
                     ['id_kategori' => ['Kategori tagihan tidak ditemukan. Silakan buat kategori tagihan terlebih dahulu.']],
@@ -132,9 +134,14 @@ class TagihanController extends Controller
 
             // Auto-create pengeluaran if status is 'lunas'
             if ($request->status == 'lunas') {
+                $kategoriTagihan = Kategori::firstOrCreate(
+                    ['nama' => 'Tagihan', 'id_user' => $user->id],
+                    ['deskripsi' => 'Pengeluaran dari tagihan']
+                );
+
                 $pengeluaran = new Pengeluaran;
                 $pengeluaran->id_user = $user->id;
-                $pengeluaran->id_kategori = null;
+                $pengeluaran->id_kategori = $kategoriTagihan->id;
                 $pengeluaran->total = $request->nominal;
                 $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
                 $pengeluaran->description = $request->catatan;
@@ -146,7 +153,8 @@ class TagihanController extends Controller
 
             return $this->sendResponse($tagihan->load('kategori_tagihan'), 'Tagihan berhasil ditambahkan.', 201);
         } catch (Exception $e) {
-            Log::error('Gagal simpan tagihan: ' . $e->getMessage());
+            Log::error('Gagal simpan tagihan: '.$e->getMessage());
+
             return $this->sendError('Gagal menyimpan tagihan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -154,21 +162,20 @@ class TagihanController extends Controller
     /**
      * Update an existing tagihan.
      *
-     * @param Request $request
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'id_kategori'       => 'required|exists:kategori_tagihans,id',
-            'nama'              => 'required|min:3',
-            'nominal'           => 'required|numeric|min:1',
-            'jatuh_tempo'       => 'required|date',
-            'status'            => 'required|in:belum_dibayar,lunas,terlambat',
+            'id_kategori' => 'required|exists:kategori_tagihans,id',
+            'nama' => 'required|min:3',
+            'nominal' => 'required|numeric|min:1',
+            'jatuh_tempo' => 'required|date',
+            'status' => 'required|in:belum_dibayar,lunas,terlambat',
             'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'pengulangan'       => 'required|in:sekali_bayar,bulanan,tahunan',
-            'catatan'           => 'required|string|max:500',
+            'pengulangan' => 'required|in:sekali_bayar,bulanan,tahunan',
+            'catatan' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -179,7 +186,7 @@ class TagihanController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $tagihan = Tagihan::where('id_user', $user->id)->find($id);
 
-            if (!$tagihan) {
+            if (! $tagihan) {
                 return $this->sendError('Tagihan tidak ditemukan.', [], 404);
             }
 
@@ -188,7 +195,7 @@ class TagihanController extends Controller
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$kategori) {
+            if (! $kategori) {
                 return $this->sendError(
                     'Kategori tidak ditemukan.',
                     ['id_kategori' => ['Kategori tagihan tidak ditemukan. Silakan buat kategori tagihan terlebih dahulu.']],
@@ -217,9 +224,14 @@ class TagihanController extends Controller
 
             // Auto-create pengeluaran if status changed to 'lunas'
             if ($request->status == 'lunas' && $oldStatus !== 'lunas') {
+                $kategoriTagihan = Kategori::firstOrCreate(
+                    ['nama' => 'Tagihan', 'id_user' => $user->id],
+                    ['deskripsi' => 'Pengeluaran dari tagihan']
+                );
+
                 $pengeluaran = new Pengeluaran;
                 $pengeluaran->id_user = $user->id;
-                $pengeluaran->id_kategori = null;
+                $pengeluaran->id_kategori = $kategoriTagihan->id;
                 $pengeluaran->total = $request->nominal;
                 $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
                 $pengeluaran->description = $request->catatan;
@@ -231,7 +243,8 @@ class TagihanController extends Controller
 
             return $this->sendResponse($tagihan->load('kategori_tagihan'), 'Tagihan berhasil diupdate.');
         } catch (Exception $e) {
-            Log::error('Gagal update tagihan: ' . $e->getMessage());
+            Log::error('Gagal update tagihan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengupdate tagihan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -239,7 +252,7 @@ class TagihanController extends Controller
     /**
      * Delete a tagihan.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -248,7 +261,7 @@ class TagihanController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $tagihan = Tagihan::where('id_user', $user->id)->find($id);
 
-            if (!$tagihan) {
+            if (! $tagihan) {
                 return $this->sendError('Tagihan tidak ditemukan.', [], 404);
             }
 
@@ -256,7 +269,8 @@ class TagihanController extends Controller
 
             return $this->sendResponse([], 'Tagihan berhasil dihapus.');
         } catch (Exception $e) {
-            Log::error('Gagal hapus tagihan: ' . $e->getMessage());
+            Log::error('Gagal hapus tagihan: '.$e->getMessage());
+
             return $this->sendError('Gagal menghapus tagihan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -268,8 +282,8 @@ class TagihanController extends Controller
     {
         return response()->json([
             'statuscode' => $code,
-            'msg'        => $message,
-            'data'       => $result,
+            'msg' => $message,
+            'data' => $result,
         ], $code);
     }
 
@@ -280,8 +294,8 @@ class TagihanController extends Controller
     {
         return response()->json([
             'statuscode' => $code,
-            'msg'        => $error,
-            'data'       => $errorMessages,
+            'msg' => $error,
+            'data' => $errorMessages,
         ], $code);
     }
 }

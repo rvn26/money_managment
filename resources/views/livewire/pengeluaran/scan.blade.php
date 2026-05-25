@@ -116,7 +116,8 @@
             submitting: false,
             errorMessage: '',
             get canSubmit() {
-                return !!this.$el.querySelector('input[name="receipt"]').files.length;
+                const input = this.$el.querySelector('input[name="receipt"]');
+                return input ? !!input.files.length : false;
             },
             async submit(event) {
                 if (this.submitting || !this.canSubmit) return;

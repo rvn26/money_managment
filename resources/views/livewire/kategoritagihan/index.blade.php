@@ -42,9 +42,6 @@
                             <tr>
                                 <th scope="col"
                                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
-                                    No</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
                                     Nama</th>
                                 <th scope="col"
                                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">
@@ -57,11 +54,20 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                             @foreach ($kategori as $index => $item)
                                 <tr>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        {{ $index + 1 }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        {{ $item->nama }}
+                                        <div class="flex items-center gap-3">
+                                            @if($item->emoji)
+                                                <span class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                                                    style="background-color: {{ $item->warna ? $item->warna . '20' : '#f3f4f6' }}">
+                                                    {{ $item->emoji }}
+                                                </span>
+                                            @else
+                                                <span class="w-10 h-10 rounded-full flex items-center justify-center text-lg bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500">
+                                                    ?
+                                                </span>
+                                            @endif
+                                            <span class="font-medium">{{ $item->nama }}</span>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                         {{ $item->deskripsi }}

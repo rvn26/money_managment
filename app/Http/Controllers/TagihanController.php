@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use App\Models\Pengeluaran;
 use App\Models\Tagihan;
 use Carbon\Carbon;
@@ -20,16 +21,15 @@ class TagihanController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'id_kategori'   => 'required|exists:kategori_tagihans,id',
-            'nama'          => 'required|min:3',
-            'nominal'       => 'required|numeric|min:1',
-            'jatuh_tempo'   => 'required|date',
-            'status'        => 'required|in:belum_dibayar,lunas,terlambat',
-            'metode_pembayaran'   => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'pengulangan'   => 'required|in:sekali_bayar,bulanan,tahunan',
-            'catatan'       => 'required|string|max:500',
+            'id_kategori' => 'required|exists:kategori_tagihans,id',
+            'nama' => 'required|min:3',
+            'nominal' => 'required|numeric|min:1',
+            'jatuh_tempo' => 'required|date',
+            'status' => 'required|in:belum_dibayar,lunas,terlambat',
+            'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
+            'pengulangan' => 'required|in:sekali_bayar,bulanan,tahunan',
+            'catatan' => 'required|string|max:500',
         ]);
-
 
         try {
             $tagihan = new Tagihan;
@@ -49,9 +49,14 @@ class TagihanController extends Controller
             $tagihan->catatan = $request->catatan;
             $tagihan->save();
             if ($request->status == 'lunas') {
+                $kategoriTagihan = Kategori::firstOrCreate(
+                    ['nama' => 'Tagihan', 'id_user' => Auth::user()->id],
+                    ['deskripsi' => 'Pengeluaran dari tagihan']
+                );
+
                 $pengeluaran = new Pengeluaran;
                 $pengeluaran->id_user = Auth::user()->id;
-                $pengeluaran->id_kategori = null;
+                $pengeluaran->id_kategori = $kategoriTagihan->id;
                 $pengeluaran->total = $request->nominal;
                 $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
                 $pengeluaran->description = $request->catatan;
@@ -60,27 +65,29 @@ class TagihanController extends Controller
                 $pengeluaran->status = 'paid';
                 $pengeluaran->save();
             }
+
             return redirect()->back()->with('message', 'Tagihan berhasil ditambahkan');
         } catch (Exception $e) {
-            Log::error('Gagal simpan pengeluaran: ' . $e->getMessage());
+            Log::error('Gagal simpan pengeluaran: '.$e->getMessage());
+
             return redirect()
                 ->back()
                 ->with('error', 'Tagihan gagal ditambahkan');
         }
     }
+
     public function edit(Request $request, $id)
     {
         $request->validate([
-            'id_kategori'   => 'required|exists:kategori_tagihans,id',
-            'nama'          => 'required|min:3',
-            'nominal'       => 'required|numeric|min:1',
-            'jatuh_tempo'   => 'required|date',
-            'status'        => 'required|in:belum_dibayar,lunas,terlambat',
-            'metode_pembayaran'   => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'pengulangan'   => 'required|in:sekali_bayar,bulanan,tahunan',
-            'catatan'       => 'required|string|max:500',
+            'id_kategori' => 'required|exists:kategori_tagihans,id',
+            'nama' => 'required|min:3',
+            'nominal' => 'required|numeric|min:1',
+            'jatuh_tempo' => 'required|date',
+            'status' => 'required|in:belum_dibayar,lunas,terlambat',
+            'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
+            'pengulangan' => 'required|in:sekali_bayar,bulanan,tahunan',
+            'catatan' => 'required|string|max:500',
         ]);
-
 
         try {
             $tagihan = Tagihan::findOrFail($id);
@@ -102,9 +109,14 @@ class TagihanController extends Controller
 
             if ($request->status == 'lunas') {
                 if ($tagihan->getOriginal('status') !== 'lunas') {
+                    $kategoriTagihan = Kategori::firstOrCreate(
+                        ['nama' => 'Tagihan', 'id_user' => Auth::user()->id],
+                        ['deskripsi' => 'Pengeluaran dari tagihan']
+                    );
+
                     $pengeluaran = new Pengeluaran;
                     $pengeluaran->id_user = Auth::user()->id;
-                    $pengeluaran->id_kategori = null;
+                    $pengeluaran->id_kategori = $kategoriTagihan->id;
                     $pengeluaran->total = $request->nominal;
                     $pengeluaran->tanggal_pengeluaran = Carbon::now(timezone: 'Asia/Jakarta')->format('Y-m-d');
                     $pengeluaran->description = $request->catatan;
@@ -117,7 +129,8 @@ class TagihanController extends Controller
 
             return redirect()->back()->with('message', 'Tagihan berhasil diedit');
         } catch (Exception $e) {
-            Log::error('Gagal edit Tagihan: ' . $e->getMessage());
+            Log::error('Gagal edit Tagihan: '.$e->getMessage());
+
             return redirect()
                 ->back()
                 ->with('error', 'Tagihan gagal diedit');
@@ -129,9 +142,10 @@ class TagihanController extends Controller
         try {
             $tagihan = Tagihan::findOrFail($id);
             $tagihan->delete();
+
             return redirect()->back()->with('message', 'Tagihan berhasil dihapus');
         } catch (Exception $e) {
-            Log::error('Gagal simpan Tagihan: ' . $e->getMessage());
+            Log::error('Gagal simpan Tagihan: '.$e->getMessage());
 
             return redirect()
                 ->back()
