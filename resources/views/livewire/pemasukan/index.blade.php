@@ -74,12 +74,31 @@
                                         {{ $transaksi->firstItem() + $index }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
-                                        <span
-                                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
-                                            <span
-                                                class="size-1.5 inline-block rounded-full bg-blue-800 dark:bg-blue-500"></span>
-                                            {{ $item->jenis }}
-                                        </span>
+                                        @php
+                                            $emojiMap = [
+                                                'gaji' => '💰',
+                                                'bonus' => '🎁',
+                                                'penjualan' => '🛒',
+                                                'investasi' => '📈',
+                                                'lain-lain' => '📦',
+                                            ];
+                                            $colorMap = [
+                                                'gaji' => '#22c55e',
+                                                'bonus' => '#f59e0b',
+                                                'penjualan' => '#3b82f6',
+                                                'investasi' => '#8b5cf6',
+                                                'lain-lain' => '#78716c',
+                                            ];
+                                            $emoji = $emojiMap[strtolower($item->jenis)] ?? '📦';
+                                            $color = $colorMap[strtolower($item->jenis)] ?? '#78716c';
+                                        @endphp
+                                        <div class="inline-flex items-center gap-2">
+                                            <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                                                style="background-color: {{ $color }}20">
+                                                {{ $emoji }}
+                                            </span>
+                                            <span class="text-sm font-medium">{{ ucwords($item->jenis) }}</span>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
                                         Rp {{ number_format($item->total, 0, ',', '.') }}

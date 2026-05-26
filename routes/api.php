@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\BatasHarianController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\KategoriPengeluaranController;
 use App\Http\Controllers\Api\KategoriTagihanController;
 use App\Http\Controllers\Api\PemasukanController;
 use App\Http\Controllers\Api\PengeluaranController;
 use App\Http\Controllers\Api\TagihanController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return response()->json(['message' => 'Hello world!']);
 });
 
-
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth'
+    'prefix' => 'auth',
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -24,10 +25,9 @@ Route::group([
     Route::get('/profile', [AuthController::class, 'profile'])->middleware(['auth:api', 'verified']);
 });
 
-
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'kategori/pengeluaran'
+    'prefix' => 'kategori/pengeluaran',
 ], function () {
     Route::get('/', [KategoriPengeluaranController::class, 'index']);
     Route::get('/{id}', [KategoriPengeluaranController::class, 'show']);
@@ -36,10 +36,9 @@ Route::group([
     Route::delete('/{id}', [KategoriPengeluaranController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'kategori/tagihan'
+    'prefix' => 'kategori/tagihan',
 ], function () {
     Route::get('/', [KategoriTagihanController::class, 'index']);
     Route::get('/{id}', [KategoriTagihanController::class, 'show']);
@@ -48,10 +47,9 @@ Route::group([
     Route::delete('/{id}', [KategoriTagihanController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'pemasukan'
+    'prefix' => 'pemasukan',
 ], function () {
     Route::get('/', [PemasukanController::class, 'index']);
     Route::get('/{id}', [PemasukanController::class, 'show']);
@@ -60,10 +58,9 @@ Route::group([
     Route::delete('/{id}', [PemasukanController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'pengeluaran'
+    'prefix' => 'pengeluaran',
 ], function () {
     Route::get('/', [PengeluaranController::class, 'index']);
     Route::get('/{id}', [PengeluaranController::class, 'show']);
@@ -72,16 +69,31 @@ Route::group([
     Route::delete('/{id}', [PengeluaranController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'tagihan'
+    'prefix' => 'tagihan',
 ], function () {
     Route::get('/', [TagihanController::class, 'index']);
     Route::get('/{id}', [TagihanController::class, 'show']);
     Route::post('/', [TagihanController::class, 'store']);
     Route::put('/{id}', [TagihanController::class, 'update']);
     Route::delete('/{id}', [TagihanController::class, 'destroy']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'dashboard',
+], function () {
+    Route::get('/', [DashboardController::class, 'index']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'batas-harian',
+], function () {
+    Route::get('/', [BatasHarianController::class, 'show']);
+    Route::post('/', [BatasHarianController::class, 'store']);
+    Route::delete('/', [BatasHarianController::class, 'destroy']);
 });
 
 Route::group([

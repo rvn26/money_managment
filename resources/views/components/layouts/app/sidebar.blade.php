@@ -155,9 +155,37 @@
     {{ $slot }}
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5/dist/autoNumeric.min.js"></script>
 
     @fluxScripts
     @stack('scripts')
+    <script>
+        // AutoNumeric Indonesian Rupiah format
+        function initAutoNumeric() {
+            document.querySelectorAll('[data-autonumeric]').forEach(function(el) {
+                try {
+                    if (!AutoNumeric.getAutoNumericElement(el)) {
+                        new AutoNumeric(el, {
+                            digitGroupSeparator: '.',
+                            decimalCharacter: ',',
+                            decimalPlaces: 0,
+                            unformatOnSubmit: true,
+                            currencySymbol: 'Rp ',
+                            currencySymbolPlacement: 'p',
+                        });
+                    }
+                } catch(e) {}
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initAutoNumeric);
+        document.addEventListener('livewire:navigated', initAutoNumeric);
+        document.addEventListener('livewire:init', function() {
+            Livewire.hook('commit', ({ succeed }) => {
+                succeed(() => setTimeout(initAutoNumeric, 100));
+            });
+        });
+    </script>
     <script>
         // Fungsi inisialisasi agar bisa dipanggil berulang
         function initAOS() {
