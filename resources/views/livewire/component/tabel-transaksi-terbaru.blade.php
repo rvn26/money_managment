@@ -7,7 +7,8 @@
             <div class="p-1.5 min-w-full inline-block align-middle">
                 <div
                     class="border border-gray-200 rounded-lg shadow-xs overflow-hidden dark:border-neutral-700 dark:shadow-gray-900">
-                    @if ($transaksi && $transaksi->count() > 0)
+                    {{-- {{ dd($transaksi) }}  --}}
+                    @if ($transaksi && count($transaksi) > 0)
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>

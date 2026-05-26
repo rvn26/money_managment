@@ -83,3 +83,14 @@ Route::group([
     Route::put('/{id}', [TagihanController::class, 'update']);
     Route::delete('/{id}', [TagihanController::class, 'destroy']);
 });
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'hutang'
+], function () {
+    Route::get('/', [TagihanController::class, 'index']);
+    Route::get('/{id}', [TagihanController::class, 'show']);
+    Route::post('/', [TagihanController::class, 'store']);
+    Route::put('/{id}', [TagihanController::class, 'update']);
+    Route::delete('/{id}', [TagihanController::class, 'destroy']);
+});

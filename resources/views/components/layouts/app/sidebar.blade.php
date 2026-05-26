@@ -57,6 +57,16 @@
                         ">
                     {{ __('Tagihan') }}
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="envelope" :href="route('hutang')" :current="request()->routeIs('hutang')"
+                    wire:navigate
+                    class="
+                        text-white!
+                        dark:text-zinc-400!
+                        data-current:text-black!
+                        data-current:dark:text-white!
+                        ">
+                    {{ __('Hutang') }}
+                </flux:sidebar.item>
                 <flux:sidebar.group expandable icon="clipboard-document-list"
                     class="grid text-white! [&_svg]:!text-white">
                     <x-slot name="heading">

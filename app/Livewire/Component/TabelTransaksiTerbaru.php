@@ -8,16 +8,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\Volt\Compilers\Mount;
 
 class TabelTransaksiTerbaru extends Component
 {
     public $transaksi;
 
-    public function Mount()
+    public function mount()
     {
         DB::statement("SET lc_time_names = 'id_ID'");
-        $pemasukan = Pemasukan::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
+        $pemasukan = Pemasukan::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user', Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
             return [
                 'tanggal_buat'          => $item->created_at,
                 'nama'                  => $item->jenis ?? 'Pemasukan Kas',
@@ -28,7 +27,7 @@ class TabelTransaksiTerbaru extends Component
                 'jenis'                 => 'Pemasukan',
             ];
         });
-        $pengeluaran = Pengeluaran::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user',Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
+        $pengeluaran = Pengeluaran::whereDate('created_at', '>=', Carbon::now()->startOfMonth())->where('id_user', Auth::user()->id)->latest()->limit(5)->get()->map(function ($item) {
             return [
                 'tanggal_buat'          => $item->created_at,
                 'nama'                  => $item->tujuan ?? 'pembelian',
@@ -42,7 +41,9 @@ class TabelTransaksiTerbaru extends Component
 
         $this->transaksi = $pemasukan->concat($pengeluaran)
             ->sortByDesc('tanggal_buat')
-            ->take(5);
+            ->take(5)
+            ->values()
+            ->toArray();
     }
     public function render()
     {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BatasHarianController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HutangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
 use App\Http\Controllers\PemasukanController;
@@ -61,5 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/batas/simpan', [BatasHarianController::class, 'simpan'])->name('simpan.batas');
     Route::put('/batas/{id}', [BatasHarianController::class, 'edit'])->name('edit.batas');
+
+    Route::get('/hutang', [HutangController::class, 'index'])->name('hutang');
+    Route::post('/hutang/simpan', [HutangController::class, 'store'])->name('hutang.store');
+    Route::put('/hutang/{id}', [HutangController::class, 'update'])->name('hutang.update');
+    Route::delete('/hutang/hapus/{id}', [HutangController::class, 'destroy'])->name('hutang.destroy');
 });
 require __DIR__ . '/settings.php';

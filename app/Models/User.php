@@ -76,6 +76,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Tagihan::class, 'id_user');
     }
 
+    public function hutang()
+    {
+        return $this->hasMany(Hutang::class, 'id_user');
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
