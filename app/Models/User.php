@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail, JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -59,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn($word) => Str::substr($word, 0, 1))
+            ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
 
@@ -67,10 +67,12 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Pengeluaran::class, 'id_user');
     }
+
     public function pemasukan()
     {
         return $this->hasMany(Pemasukan::class, 'id_user');
     }
+
     public function tagihan()
     {
         return $this->hasMany(Tagihan::class, 'id_user');
@@ -79,6 +81,52 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function hutang()
     {
         return $this->hasMany(Hutang::class, 'id_user');
+    }
+
+    /**
+     * Hutang yang dicatat oleh teman dengan saya sebagai yang berhutang.
+     */
+    public function hutangSaya()
+    {
+        return $this->hasMany(Hutang::class, 'id_teman');
+    }
+
+    /**
+     * Permintaan pertemanan yang saya kirim.
+     */
+    public function pertemananDikirim()
+    {
+        return $this->hasMany(Pertemanan::class, 'id_user');
+    }
+
+    /**
+     * Permintaan pertemanan yang saya terima.
+     */
+    public function pertemananDiterima()
+    {
+        return $this->hasMany(Pertemanan::class, 'id_teman');
+    }
+
+    /**
+     * Semua user yang sudah berteman dengan saya (timbal balik, status accepted).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
+     */
+    public function teman()
+    {
+        $dikirim = self::query()
+            ->whereIn('id', Pertemanan::query()
+                ->where('id_user', $this->id)
+                ->where('status', 'accepted')
+                ->select('id_teman'));
+
+        $diterima = self::query()
+            ->whereIn('id', Pertemanan::query()
+                ->where('id_teman', $this->id)
+                ->where('status', 'accepted')
+                ->select('id_user'));
+
+        return $dikirim->union($diterima)->get();
     }
 
     /**

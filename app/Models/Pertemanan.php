@@ -5,24 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hutang extends Model
+class Pertemanan extends Model
 {
-    /** @use HasFactory<\Database\Factories\HutangFactory> */
+    /** @use HasFactory<\Database\Factories\PertemananFactory> */
     use HasFactory;
 
     protected $fillable = [
         'id_user',
         'id_teman',
-        'nama',
-        'jumlah',
-        'tanggal_pinjaman',
         'status',
-        'metode_pembayaran',
-        'catatan',
-    ];
-
-    protected $casts = [
-        'tanggal_pinjaman' => 'date',
     ];
 
     public function user()

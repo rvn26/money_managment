@@ -4,23 +4,27 @@
     @elseif($errors->any() || session('error'))
         @livewire('component.notif-error')
     @endif
-    <div>
-        <h1 class="text-2xl font-bold">Pengeluaran</h1>
-    </div>
-    <div class="py-3 pt-5 flex justify-between gap-2">
-        <div class="relative flex-1 min-w-0 max-w-45 sm:max-w-xs">
-            <label for="hs-table-search" class="sr-only">Search</label>
-            <input wire:model.live="cari" type="text" name="hs-table-search" id="hs-table-search"
-                class="py-1.5 sm:py-2 px-3 ps-9 block w-full border border-gray-300 shadow-sm rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="Cari...">
-            <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.3-4.3"></path>
-                </svg>
+    <h1 class="text-2xl font-bold">Pengeluaran</h1>
+        <p class="text-sm text-gray-500 dark:text-neutral-400">
+             Daftar pengeluaran kamu selama periode tertentu yang tercatat.
+        </p>
+    <div class="py-3 pt-5 flex flex-wrap justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-2 flex-1 min-w-0">
+            <div class="relative min-w-0 max-w-45 sm:max-w-xs">
+                <label for="hs-table-search" class="sr-only">Search</label>
+                <input wire:model.live="cari" type="text" name="hs-table-search" id="hs-table-search"
+                    class="py-1.5 sm:py-2 px-3 ps-9 block w-full border border-gray-300 shadow-sm rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    placeholder="Cari...">
+                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+                    <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                </div>
             </div>
+            <x-filter-periode :periode="$periode" :bulan-custom="$bulanCustom" :label="$this->labelPeriode" />
         </div>
         <div class="shrink-0 flex items-center" >
 
@@ -69,9 +73,9 @@
                                     Action</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
 
-                            @foreach ($transaksi as $index => $item)
+                            @forelse($transaksi as $index => $item)
                                 <tr>
                                     {{-- <a wire:click="edit('{{ $item->id }}')" class="cursor-pointer"> --}}
                                     <td class="text-center px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 cursor-pointer"
@@ -150,7 +154,13 @@
                                     </td>
 
                                 </tr>
-                            @endforeach
+                              @empty
+                                <tr>
+                                    <td colspan="9" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-neutral-400">
+                                        Belum ada catatan pengeluaran.
+                                    </td>
+                                </tr>
+                            @endforelse
 
                         </tbody>
                     </table>
@@ -158,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-4 py-4 bg-white border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="px-4 py-4 border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
             {{ $transaksi->links() }}
         </div>
     </div>

@@ -2,56 +2,67 @@
 
 namespace App\Livewire\Tagihan;
 
+use App\Livewire\Concerns\WithPeriodeFilter;
 use App\Models\Tagihan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    use WithPeriodeFilter;
+
     public $cari;
 
     protected $updatesQueryString = [
-        ['search' => ['except' => '']],
+        ['cari' => ['except' => '']],
+        ['periode' => ['except' => 'bulan_ini']],
+        ['bulanCustom' => ['except' => '']],
     ];
 
     public function mount()
     {
         $this->cari = request()->query('search', $this->cari);
     }
+
     public function tampilTambah()
     {
-        // dd("hello");
         $this->dispatch('tambahTagihan');
     }
+
     public function edit($id)
     {
-        // dd("hello");
         $this->dispatch('editTagihan', $id);
     }
+
     public function hapus($id)
     {
-        // dd("hello");
         $this->dispatch('hapusTagihan', $id);
     }
+
     public function render()
     {
         DB::statement("SET lc_time_names = 'id_ID'");
+
+        $query = Tagihan::with(['user'])->where('id_user', Auth::user()->id);
+
+        $this->applyPeriodeScope($query, 'jatuh_tempo');
+
+        if ($this->cari) {
+            $cari = $this->cari;
+            $query->where(function ($q) use ($cari) {
+                $q->where('kategori', 'like', "%{$cari}%")
+                    ->orWhere('nama', 'like', "%{$cari}%")
+                    ->orWhere('jatuh_tempo', 'like', "%{$cari}%")
+                    ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%W') LIKE ?", ["%{$cari}%"])
+                    ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%M') LIKE ?", ["%{$cari}%"]);
+            });
+        }
+
         return view('livewire.tagihan.index', [
-            'tagihan' => $this->cari === null ?
-                Tagihan::with(['user'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
-                Tagihan::with(['user'])
-                ->where('id_user', Auth::user()->id)
-                ->when($this->cari, function ($query) {
-                    $query->where(function ($q) {
-                        $q->where('kategori', 'like', '%' . $this->cari . '%')
-                            ->orWhere('jatuh_tempo', 'like', '%' . $this->cari . '%')
-                            ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%W') LIKE ?", ["%{$this->cari}%"])
-                            ->orWhereRaw("DATE_FORMAT(jatuh_tempo, '%M') LIKE ?", ["%{$this->cari}%"]);
-                    });
-                })
-                ->latest()
-                ->paginate(10),
+            'tagihan' => $query->latest()->paginate(10),
         ]);
     }
 }

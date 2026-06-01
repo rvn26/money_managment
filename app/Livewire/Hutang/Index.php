@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Hutang;
 
+use App\Livewire\Concerns\WithPeriodeFilter;
 use App\Models\Hutang;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -10,36 +11,52 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
-    public $cari;
+    use WithPeriodeFilter;
+
+    public ?string $cari = null;
 
     protected $updatesQueryString = [
-        ['search' => ['except' => '']],
+        ['cari' => ['except' => '']],
+        ['periode' => ['except' => 'bulan_ini']],
+        ['bulanCustom' => ['except' => '']],
     ];
 
-    public function tampilTambah()
+    public function tampilTambah(): void
     {
         $this->dispatch('tampiltambah');
     }
 
-    public function edit($id)
+    public function edit($id): void
     {
-        dd("hello");
         $this->dispatch('editHutang', $id);
     }
-    public function hapus($id)
+
+    public function hapus($id): void
     {
-        // dd("hello");
         $this->dispatch('hapusHutang', $id);
     }
 
     public function render()
     {
+        $userId = Auth::user()->id;
+
+        $query = Hutang::with(['user', 'teman'])->where('id_user', $userId);
+
+        $this->applyPeriodeScope($query, 'tanggal_pinjaman');
+
+        if ($this->cari) {
+            $cari = $this->cari;
+            $query->where(function ($q) use ($cari) {
+                $q->where('nama', 'like', "%{$cari}%")
+                    ->orWhereHas('teman', function ($t) use ($cari) {
+                        $t->where('name', 'like', "%{$cari}%")
+                            ->orWhere('email', 'like', "%{$cari}%");
+                    });
+            });
+        }
+
         return view('livewire.hutang.index', [
-
-            'hutang' => $this->cari === null ?
-                Hutang::with(['user'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
-                Hutang::with(['user'])->where('id_user', Auth::user()->id)->where('nama', 'like', "%{$this->cari}%")->latest()->paginate(10),
-
+            'hutang' => $query->latest()->paginate(10),
         ]);
     }
 }

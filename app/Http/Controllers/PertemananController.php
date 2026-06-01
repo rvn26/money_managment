@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Pertemanan;
+use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+class PertemananController extends Controller
+{
+    public function show()
+    {
+        return view('pertemanan');
+    }
+
+    /**
+     * Kirim permintaan pertemanan ke pengguna lain berdasarkan email.
+     */
+    public function kirim(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        try {
+            $userId = Auth::user()->id;
+            $teman = User::where('email', $request->email)->firstOrFail();
+
+            if ($teman->id === $userId) {
+                return redirect()->back()->with('error', 'Tidak bisa berteman dengan diri sendiri');
+            }
+
+            $sudahAda = Pertemanan::query()
+                ->where(function ($q) use ($userId, $teman) {
+                    $q->where('id_user', $userId)->where('id_teman', $teman->id);
+                })
+                ->orWhere(function ($q) use ($userId, $teman) {
+                    $q->where('id_user', $teman->id)->where('id_teman', $userId);
+                })
+                ->exists();
+
+            if ($sudahAda) {
+                return redirect()->back()->with('error', 'Permintaan pertemanan sudah ada atau kalian sudah berteman');
+            }
+
+            $pertemanan = new Pertemanan;
+            $pertemanan->id_user = $userId;
+            $pertemanan->id_teman = $teman->id;
+            $pertemanan->status = 'pending';
+            $pertemanan->save();
+
+            return redirect()->back()->with('message', 'Permintaan pertemanan berhasil dikirim');
+        } catch (Exception $e) {
+            Log::error('Gagal kirim permintaan pertemanan: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal mengirim permintaan pertemanan, silakan coba lagi');
+        }
+    }
+
+    /**
+     * Terima permintaan pertemanan yang masuk.
+     */
+    public function terima($id)
+    {
+        try {
+            $pertemanan = Pertemanan::where('id', $id)
+                ->where('id_teman', Auth::user()->id)
+                ->where('status', 'pending')
+                ->firstOrFail();
+
+            $pertemanan->status = 'accepted';
+            $pertemanan->save();
+
+            return redirect()->back()->with('message', 'Permintaan pertemanan berhasil diterima');
+        } catch (Exception $e) {
+            Log::error('Gagal terima pertemanan: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menerima permintaan, silakan coba lagi');
+        }
+    }
+
+    /**
+     * Multifungsi: batalkan permintaan terkirim, tolak permintaan masuk,
+     * atau hapus teman yang sudah accepted.
+     */
+    public function hapus($id)
+    {
+        try {
+            $userId = Auth::user()->id;
+
+            $pertemanan = Pertemanan::where('id', $id)
+                ->where(function ($q) use ($userId) {
+                    $q->where('id_user', $userId)->orWhere('id_teman', $userId);
+                })
+                ->firstOrFail();
+
+            $pertemanan->delete();
+
+            return redirect()->back()->with('message', 'Pertemanan berhasil dihapus');
+        } catch (Exception $e) {
+            Log::error('Gagal hapus pertemanan: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menghapus, silakan coba lagi');
+        }
+    }
+}

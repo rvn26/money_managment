@@ -1,17 +1,39 @@
 <div>
-    {{-- @if ($show) --}}
-    <x-modal wire:model="show" title="Hutang Baru">
-        <p class="mb-4 text-sm text-gray-500 dark:text-gray-300">
-            Tambahkan hutang baru untuk membantu Anda melacak utang dan pembayaran dengan lebih mudah. Dengan fitur ini,
-            Anda dapat mencatat detail hutang, tanggal jatuh tempo, dan status pembayaran untuk memastikan keuangan Anda
-            tetap teratur.
-        </p>
-        <form action="{{ route('hutang.store') }}" method="POST" class="flex flex-col gap-4">
+    <x-modal wire:model="show" title="Hutang Baru" description="Catat hutang ke teman yang sudah terhubung di aplikasi, atau ke nama bebas.">
+        <form action="{{ route('hutang.store') }}" method="POST" class="flex flex-col gap-4" x-data="{ pakaiTeman: false }">
             @csrf
-            <div>
+
+            <div class="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 p-2">
+                <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+                    <input type="checkbox" x-model="pakaiTeman" class="rounded border-gray-300">
+                    Hutang ke teman di aplikasi
+                </label>
+            </div>
+
+            <div x-show="pakaiTeman" x-cloak>
+                <label for="id_teman" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Teman</label>
+                <select id="id_teman" name="id_teman" :disabled="!pakaiTeman"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">— Pilih teman —</option>
+                    @foreach ($temanList as $t)
+                        <option value="{{ $t->id }}">{{ $t->name }} ({{ $t->email }})</option>
+                    @endforeach
+                </select>
+                @if ($temanList->isEmpty())
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Belum ada teman terhubung. Tambahkan teman lebih dulu di menu Teman.
+                    </p>
+                @endif
+                @error('id_teman')
+                    <p class="text-sm text-red-500">{{ $message }}</p>
+                @enderror
+                
+            </div>
+
+            <div x-show="!pakaiTeman">
                 <label for="nama" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama</label>
-                <input type="text" id="nama" wire:model.defer="nama" name="nama" required
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <input type="text" id="nama" name="nama" :disabled="pakaiTeman"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 @error('nama')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
@@ -19,48 +41,56 @@
 
             <div>
                 <label for="jumlah" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah</label>
-                <input type="number" id="jumlah" name="jumlah" wire:model.defer="jumlah" required
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <input type="text" id="jumlah" name="jumlah" data-autonumeric required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 @error('jumlah')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
+
             <div>
-                <label for="tanggal_pinjaman"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Pinjaman</label>
-                <input type="date" id="tanggal_pinjaman" name="tanggal_pinjaman" wire:model.defer="tanggal_pinjaman" required
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <label for="tanggal_pinjaman" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Pinjaman</label>
+                <input type="date" id="tanggal_pinjaman" name="tanggal_pinjaman" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 @error('tanggal_pinjaman')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
+
             <div>
-                <label for="keterangan"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Catatan</label>
-                <textarea id="keterangan" name="catatan" wire:model.defer="keterangan"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
-                @error('keterangan')
+                <label for="metode_pembayaran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Metode Pembayaran</label>
+                <select id="metode_pembayaran" name="metode_pembayaran" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">— Pilih metode —</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Qris">Qris</option>
+                    <option value="Bank">Bank</option>
+                    <option value="Dana">Dana</option>
+                    <option value="Gopay">Gopay</option>
+                </select>
+                @error('metode_pembayaran')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
 
+            <div>
+                <label for="catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Catatan</label>
+                <textarea id="catatan" name="catatan" rows="2"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                @error('catatan')
+                    <p class="text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-
-            <button type="submit"
-                class="text-white bg-primary hover:bg-primary-dark font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-dark dark:hover:bg-primary">
-                Tambah Hutang
-            </button>
-            {{-- <input type="file" name="receipt" accept="image/*" required
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                @if ($errorMessage)
-                    <p class="text-sm text-red-500">{{ $errorMessage }}</p>
-                @endif --}}
-            {{-- <button type="submit"
-                    class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-blue-600"
-                    :disabled="submitting || !canSubmit">
-                    {{ submitting ? 'Memproses...' : 'Scan Sekarang' }}
-                </button> --}}
+            <div class="flex justify-end gap-2 pt-2">
+                <flux:button type="button" variant="ghost" wire:click="$toggle('show')">
+                    Batal
+                </flux:button>
+                <button type="submit"
+                    class="text-white bg-primary hover:bg-primary-dark font-medium rounded-lg text-sm px-5 py-2.5">
+                    Tambah Hutang
+                </button>
+            </div>
         </form>
     </x-modal>
-    {{-- @endif --}}
 </div>

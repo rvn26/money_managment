@@ -1,23 +1,22 @@
 <?php
 
 use App\Http\Controllers\BatasHarianController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\PertemananController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\TagihanController;
 use App\Livewire\Pengeluaran\HasilScan;
-use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('livewire.auth.login');
 })->name('home');
 
-Route::get('/check-https', fn() => request()->isSecure() ? 'HTTPS' : 'HTTP');
+Route::get('/check-https', fn () => request()->isSecure() ? 'HTTPS' : 'HTTP');
 Route::get('/debug-headers', function () {
     return response()->json([
         'is_secure' => request()->isSecure(),
@@ -64,8 +63,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/batas/{id}', [BatasHarianController::class, 'edit'])->name('edit.batas');
 
     Route::get('/hutang', [HutangController::class, 'index'])->name('hutang');
+    Route::get('/hutang/saya', [HutangController::class, 'hutangSaya'])->name('hutang.saya');
     Route::post('/hutang/simpan', [HutangController::class, 'store'])->name('hutang.store');
     Route::put('/hutang/{id}', [HutangController::class, 'update'])->name('hutang.update');
     Route::delete('/hutang/hapus/{id}', [HutangController::class, 'destroy'])->name('hutang.destroy');
+
+    Route::get('/teman', [PertemananController::class, 'show'])->name('pertemanan');
+    Route::post('/teman/kirim', [PertemananController::class, 'kirim'])->name('pertemanan.kirim');
+    Route::put('/teman/{id}/terima', [PertemananController::class, 'terima'])->name('pertemanan.terima');
+    Route::delete('/teman/{id}', [PertemananController::class, 'hapus'])->name('pertemanan.hapus');
 });
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

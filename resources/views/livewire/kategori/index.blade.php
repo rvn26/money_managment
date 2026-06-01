@@ -51,8 +51,8 @@
                                     Action</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                            @foreach ($kategori as $index => $item)
+                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
+                            @forelse ($kategori as $index => $item)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                         <div class="flex items-center gap-3">
@@ -83,7 +83,13 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                              @empty
+                                <tr>
+                                    <td colspan="8" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-neutral-400">
+                                        Belum ada catatan kategori.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

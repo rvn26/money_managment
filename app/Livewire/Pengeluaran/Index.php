@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pengeluaran;
 
+use App\Livewire\Concerns\WithPeriodeFilter;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,11 +12,16 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    use WithPeriodeFilter;
+
     public $show = false;
+
     public $cari;
 
     protected $updatesQueryString = [
-        ['search' => ['except' => '']],
+        ['cari' => ['except' => '']],
+        ['periode' => ['except' => 'bulan_ini']],
+        ['bulanCustom' => ['except' => '']],
     ];
 
     public function mount()
@@ -25,18 +31,19 @@ class Index extends Component
 
     public function tampilScan()
     {
-        // dd('tampil scan');
-        // $this->show = false;
         $this->dispatch('tampilScan');
     }
+
     public function tampilTambah()
     {
         $this->dispatch('tampilTambah');
     }
+
     public function edit($id)
     {
         $this->dispatch('editPengeluaran', $id);
     }
+
     public function hapus($id)
     {
         $this->dispatch('hapusPengeluaran', $id);
@@ -45,22 +52,24 @@ class Index extends Component
     public function render()
     {
         DB::statement("SET lc_time_names = 'id_ID'");
+
+        $query = Pengeluaran::with(['user', 'kategori'])
+            ->where('id_user', Auth::user()->id);
+
+        $this->applyPeriodeScope($query, 'tanggal_pengeluaran');
+
+        if ($this->cari) {
+            $cari = $this->cari;
+            $query->where(function ($q) use ($cari) {
+                $q->where('tujuan', 'like', "%{$cari}%")
+                    ->orWhere('tanggal_pengeluaran', 'like', "%{$cari}%")
+                    ->orWhereRaw("DATE_FORMAT(tanggal_pengeluaran, '%W') LIKE ?", ["%{$cari}%"])
+                    ->orWhereRaw("DATE_FORMAT(tanggal_pengeluaran, '%M') LIKE ?", ["%{$cari}%"]);
+            });
+        }
+
         return view('livewire.pengeluaran.index', [
-            // Contoh di Laravel (Eager Loading)
-            'transaksi' => $this->cari === null ?
-                Pengeluaran::with(['user', 'kategori'])->where('id_user', Auth::user()->id)->latest()->paginate(10) :
-                Pengeluaran::with(['user', 'kategori'])
-                ->where('id_user', Auth::user()->id)
-                ->when($this->cari, function ($query) {
-                    $query->where(function ($q) {
-                        $q->where('tujuan', 'like', '%' . $this->cari . '%')
-                            ->orWhere('tanggal_pengeluaran', 'like', '%' . $this->cari . '%')
-                            ->orWhereRaw("DATE_FORMAT(tanggal_pengeluaran, '%W') LIKE ?", ["%{$this->cari}%"])
-                            ->orWhereRaw("DATE_FORMAT(tanggal_pengeluaran, '%M') LIKE ?", ["%{$this->cari}%"]);
-                    });
-                })
-                ->latest()
-                ->paginate(8),
+            'transaksi' => $query->latest()->paginate(10),
         ]);
     }
 }

@@ -2,18 +2,24 @@
 
 namespace App\Livewire\Pemasukan;
 
+use App\Livewire\Concerns\WithPeriodeFilter;
 use App\Models\Pemasukan;
-use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    use WithPeriodeFilter;
+
     public $cari;
 
     protected $updatesQueryString = [
-        ['search' => ['except' => '']],
+        ['cari' => ['except' => '']],
+        ['periode' => ['except' => 'bulan_ini']],
+        ['bulanCustom' => ['except' => '']],
     ];
 
     public function mount()
@@ -23,38 +29,40 @@ class Index extends Component
 
     public function tampilTambah()
     {
-        // dd("hello");
         $this->dispatch('tambahpemasukan');
     }
+
     public function edit($id)
     {
-        // dd("hello");
-        $this->dispatch('editpemasukan',$id);
+        $this->dispatch('editpemasukan', $id);
     }
+
     public function hapus($id)
     {
-        // dd("hello");
-        $this->dispatch('hapusPemasukan',$id);
+        $this->dispatch('hapusPemasukan', $id);
     }
 
     public function render()
     {
         DB::statement("SET lc_time_names = 'id_ID'");
+
+        $query = Pemasukan::with(['user'])
+            ->where('id_user', Auth::user()->id);
+
+        $this->applyPeriodeScope($query, 'tanggal');
+
+        if ($this->cari) {
+            $cari = $this->cari;
+            $query->where(function ($q) use ($cari) {
+                $q->where('jenis', 'like', "%{$cari}%")
+                    ->orWhere('tanggal', 'like', "%{$cari}%")
+                    ->orWhereRaw("DATE_FORMAT(tanggal, '%W') LIKE ?", ["%{$cari}%"])
+                    ->orWhereRaw("DATE_FORMAT(tanggal, '%M') LIKE ?", ["%{$cari}%"]);
+            });
+        }
+
         return view('livewire.pemasukan.index', [
-            'transaksi' => $this->cari === null ?
-                Pemasukan::with(['user'])->where('id_user',Auth::user()->id)->latest()->paginate(10) :
-                Pemasukan::with(['user'])
-                ->where('id_user',Auth::user()->id)
-                ->when($this->cari, function ($query) {
-                    $query->where(function ($q) {
-                        $q->where('jenis', 'like', '%' . $this->cari . '%')
-                            ->orWhere('tanggal', 'like', '%' . $this->cari . '%')
-                            ->orWhereRaw("DATE_FORMAT(tanggal, '%W') LIKE ?", ["%{$this->cari}%"])
-                            ->orWhereRaw("DATE_FORMAT(tanggal, '%M') LIKE ?", ["%{$this->cari}%"]);
-                    });
-                })
-                ->latest()
-                ->paginate(10),
+            'transaksi' => $query->latest()->paginate(10),
         ]);
     }
 }
