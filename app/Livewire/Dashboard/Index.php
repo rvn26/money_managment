@@ -13,13 +13,27 @@ use Livewire\Component;
 class Index extends Component
 {
     public $totalSaldo = 0;
+
     public $totalPemasukan = 0;
+
     public $totalPengeluaran = 0;
+
     public $totalTagihan = 0;
+
     public $selisih = 0;
+
     public $persentasePemasukan = 0;
+
     public $persentasePengeluaran = 0;
-    public $batasHarian, $totalTerpakai, $persentase, $tagihanBelumBayar;
+
+    public $batasHarian;
+
+    public $totalTerpakai;
+
+    public $persentase;
+
+    public $tagihanBelumBayar;
+
     public $filter = 'bulan_ini';
 
     public function tampilsetbatas()
@@ -27,24 +41,28 @@ class Index extends Component
         // dd('hallo');
         $this->dispatch('setbatas');
     }
+
     public function TambahPemasukan()
     {
         $this->dispatch('tambahpemasukan');
     }
+
     public function TambahPengeluaran()
     {
         $this->dispatch('tampilTambah');
     }
+
     public function TambahTagihan()
     {
         // dd("hello");
         $this->dispatch('tambahTagihan');
     }
+
     public function laporan()
     {
-        // dd("hello");
-        $this->dispatch('cekfitur');
+        $this->dispatch('bukaLaporan');
     }
+
     public function filterData()
     {
         $queryPengeluaran = Pengeluaran::where('id_user', Auth::user()->id);
@@ -72,11 +90,11 @@ class Index extends Component
 
                 $queryPemasukanLalu->whereBetween('tanggal', [
                     Carbon::now()->subDays(14),
-                    Carbon::now()->subDays(8)
+                    Carbon::now()->subDays(8),
                 ]);
                 $queryPengeluaranLalu->whereBetween('tanggal_pengeluaran', [
                     Carbon::now()->subDays(14),
-                    Carbon::now()->subDays(8)
+                    Carbon::now()->subDays(8),
                 ]);
                 break;
             case '30_hari':
@@ -87,11 +105,11 @@ class Index extends Component
 
                 $queryPemasukanLalu->whereBetween('tanggal', [
                     Carbon::now()->subDays(60),
-                    Carbon::now()->subDays(31)
+                    Carbon::now()->subDays(31),
                 ]);
                 $queryPengeluaranLalu->whereBetween('tanggal_pengeluaran', [
                     Carbon::now()->subDays(60),
-                    Carbon::now()->subDays(31)
+                    Carbon::now()->subDays(31),
                 ]);
                 break;
             case 'bulan_ini':
@@ -115,7 +133,7 @@ class Index extends Component
                 $queryPengeluaranLalu->whereYear('tanggal_pengeluaran', Carbon::now()->subYear()->year);
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
 
@@ -123,7 +141,7 @@ class Index extends Component
         $this->totalPemasukan = $queryPemasukan->sum('total');
         $totalPengeluaranlama = $queryPengeluaranlama->sum('total');
         $totalPemasukanlama = $queryPemasukanlama->sum('total');
-        $saldoLama = $totalPemasukanlama -  $totalPengeluaranlama;
+        $saldoLama = $totalPemasukanlama - $totalPengeluaranlama;
         $totalPemasukanLalu = $queryPemasukanLalu->sum('total');
         $totalPengeluaranLalu = $queryPengeluaranLalu->sum('total');
         // dd($this->totalPengeluaran);
@@ -164,10 +182,11 @@ class Index extends Component
             ->whereDate('tanggal_pengeluaran', now())
             ->sum('total');
         $this->batasHarian = BatasHarian::where('id_user', Auth::user()->id)->first();
-        $this->tagihanBelumBayar = Tagihan::where('id_user', Auth::user()->id)->where('status','belum_dibayar')->count();
+        $this->tagihanBelumBayar = Tagihan::where('id_user', Auth::user()->id)->where('status', 'belum_dibayar')->count();
         $batas = $this->batasHarian ? $this->batasHarian->batas : 0;
         $this->persentase = $batas > 0 ? min(($this->totalTerpakai / $batas) * 100, 100) : 0;
     }
+
     public function render()
     {
         $this->filterData();

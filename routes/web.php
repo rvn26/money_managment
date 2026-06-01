@@ -4,6 +4,7 @@ use App\Http\Controllers\BatasHarianController;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PertemananController;
@@ -72,5 +73,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/teman/kirim', [PertemananController::class, 'kirim'])->name('pertemanan.kirim');
     Route::put('/teman/{id}/terima', [PertemananController::class, 'terima'])->name('pertemanan.terima');
     Route::delete('/teman/{id}', [PertemananController::class, 'hapus'])->name('pertemanan.hapus');
+
+    Route::post('/laporan/csv', [LaporanController::class, 'csv'])->name('laporan.csv');
+    Route::post('/laporan/pdf', [LaporanController::class, 'pdf'])->name('laporan.pdf');
 });
 require __DIR__.'/settings.php';

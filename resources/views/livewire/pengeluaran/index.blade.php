@@ -73,7 +73,7 @@
                                     Action</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tbody class="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-neutral-700">
 
                             @forelse($transaksi as $index => $item)
                                 <tr>
@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-4 py-4 border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="px-4 py-4  border-gray-200  dark:border-neutral-700">
             {{ $transaksi->links() }}
         </div>
     </div>
