@@ -65,12 +65,13 @@ class HutangController extends Controller
                     return redirect()->back()->with('error', 'Pengguna tersebut bukan teman kamu');
                 }
             }
-            $teman = User::find($request->id_teman)->first();
+            
             // dd($teman);
             $hutang = new Hutang;
             $hutang->id_user = $userId;
             $hutang->id_teman = $request->id_teman;
             if ($request->id_teman != null) {
+                $teman = User::find($request->id_teman)->first();
                 $hutang->nama = $teman->name;
             } else {
                 $hutang->nama = $request->nama ?: null;
