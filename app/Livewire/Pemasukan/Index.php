@@ -44,7 +44,9 @@ class Index extends Component
 
     public function render()
     {
-        DB::statement("SET lc_time_names = 'id_ID'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("SET lc_time_names = 'id_ID'");
+        }
 
         $query = Pemasukan::with(['user'])
             ->where('id_user', Auth::user()->id);

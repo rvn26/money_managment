@@ -42,12 +42,12 @@
             destroyChart1();
 
             // DATA DUMMY: Pengeluaran berdasarkan kategori
-            const dummyData = {
-                labels: ['Makanan', 'Transportasi', 'Belanja'],
-                series: [1200000, 450000, 850000] // Nominal Rp
-            };
+            // const dummyData = {
+            //     labels: ['Makanan', 'Transportasi', 'Belanja'],
+            //     series: [1200000, 450000, 850000] // Nominal Rp
+            // };
 
-            const data = incomingData || dummyData;
+            const data = incomingData || @json($categoryChartData ?? ['labels' => [], 'series' => []]);
 
             window.categoryChart = new ApexCharts(el, {
                 chart: {
