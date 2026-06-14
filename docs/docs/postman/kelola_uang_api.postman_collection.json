@@ -1,0 +1,887 @@
+{
+	"info": {
+		"_postman_id": "7de6f497-80d1-244c-ecc0-23d612340674",
+		"name": "Kepitink Money Management API",
+		"description": "Koleksi Postman untuk menguji API aplikasi Kepitink (Kelola Uang) backend Laravel. Meliputi modul Autentikasi JWT, FCM Token, Notifikasi, Pertemanan, dan Hutang.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"description": "Endpoint untuk registrasi, login, manajemen session, dan profile menggunakan JWT Token.",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ervandi User 1\",\n    \"email\": \"user1@example.com\",\n    \"password\": \"password123\",\n    \"c_password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User 2 (For Testing Friends)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Teman User 2\",\n    \"email\": \"user2@example.com\",\n    \"password\": \"password123\",\n    \"c_password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (pm.response.code === 200 && response.data && response.data.access_token) {",
+									"    pm.collectionVariables.set(\"token\", response.data.access_token);",
+									"    console.log(\"JWT Token automatically set to collection variable 'token'\");",
+									"}"
+								],
+								"type": "javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user1@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (pm.response.code === 200 && response.data && response.data.access_token) {",
+									"    pm.collectionVariables.set(\"token\", response.data.access_token);",
+									"    console.log(\"JWT Token refreshed and updated in variables.\");",
+									"}"
+								],
+								"type": "javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. FCM Token Management",
+			"description": "Endpoint untuk mengelola Firebase Cloud Messaging Device Token milik user.",
+			"item": [
+				{
+					"name": "Simpan / Update FCM Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"fcm-token-test-dummy-string-123456789\",\n    \"device_name\": \"Postman Testing Client (Samsung Galaxy S24)\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/fcm-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fcm-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus FCM Token",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"fcm-token-test-dummy-string-123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/fcm-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fcm-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Notification History",
+			"description": "Endpoint untuk melihat riwayat notifikasi in-app, status dibaca, dan jumlah notifikasi unread.",
+			"item": [
+				{
+					"name": "Get Daftar Notifikasi (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifikasi?page=1&limit=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notifikasi"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Halaman ke-n"
+								},
+								{
+									"key": "limit",
+									"value": "15",
+									"description": "Jumlah data per halaman (Max 100)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jumlah Notifikasi Belum Dibaca",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifikasi/belum-dibaca",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notifikasi",
+								"belum-dibaca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tandai Satu Notifikasi Dibaca",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifikasi/{{notif_id}}/baca",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notifikasi",
+								"{{notif_id}}",
+								"baca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tandai Semua Notifikasi Dibaca",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifikasi/baca-semua",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notifikasi",
+								"baca-semua"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Pertemanan (Trigger Notifikasi)",
+			"description": "Endpoint untuk mengelola hubungan pertemanan. Kirim, Terima, atau Hapus permintaan pertemanan akan men-trigger notifikasi FCM ke user tujuan.",
+			"item": [
+				{
+					"name": "Cari Pengguna Lain (by Email)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user2@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/cari-user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"cari-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kirim Permintaan Pertemanan",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user2@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/kirim",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"kirim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Daftar Teman (Accepted)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan?cari=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan"
+							],
+							"query": [
+								{
+									"key": "cari",
+									"value": "",
+									"description": "Opsional: Cari teman berdasarkan nama atau email"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permintaan Pertemanan Masuk (Pending)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/permintaan-masuk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"permintaan-masuk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permintaan Pertemanan Terkirim (Pending)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/permintaan-terkirim",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"permintaan-terkirim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Terima Permintaan Pertemanan",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/terima/{{pertemanan_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"terima",
+								"{{pertemanan_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus Pertemanan / Batalkan / Tolak",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pertemanan/{{pertemanan_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pertemanan",
+								"{{pertemanan_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Hutang (Trigger Notifikasi)",
+			"description": "Endpoint untuk mencatat dan mengupdate hutang-piutang dengan teman. Menambah atau mengubah status hutang teman akan otomatis mengirim notifikasi FCM ke HP teman tersebut.",
+			"item": [
+				{
+					"name": "Catat Hutang Baru",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_teman\": 2,\n    \"jumlah\": 75000,\n    \"tanggal_pinjaman\": \"2026-06-12\",\n    \"metode_pembayaran\": \"Dana\",\n    \"catatan\": \"Pinjam buat beli makan siang\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hutang",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Daftar Hutang (Dicatat Oleh Saya)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hutang?periode=bulan_ini&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang"
+							],
+							"query": [
+								{
+									"key": "periode",
+									"value": "bulan_ini",
+									"description": "'semua' | 'bulan_ini' | 'minggu_ini' | 'custom'"
+								},
+								{
+									"key": "bulan_custom",
+									"value": "2026-06",
+									"description": "Format Y-m, hanya diisi jika periode=custom",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Jumlah data per halaman"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Hutang",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hutang/{{hutang_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang",
+								"{{hutang_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hutang Saya (Saya sebagai peminjam)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hutang/hutang-saya?periode=bulan_ini&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang",
+								"hutang-saya"
+							],
+							"query": [
+								{
+									"key": "periode",
+									"value": "bulan_ini",
+									"description": "'semua' | 'bulan_ini' | 'minggu_ini' | 'custom'"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Jumlah data per halaman"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Detail & Status Hutang",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jumlah\": 75000,\n    \"tanggal_pinjaman\": \"2026-06-12\",\n    \"metode_pembayaran\": \"Dana\",\n    \"status\": \"lunas\",\n    \"catatan\": \"Pinjam buat beli makan siang - SUDAH LUNAS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hutang/{{hutang_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang",
+								"{{hutang_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus Catatan Hutang",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hutang/{{hutang_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hutang",
+								"{{hutang_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "notif_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "pertemanan_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "hutang_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
