@@ -4,10 +4,12 @@
     @elseif($errors->any())
         @livewire('component.notif-error')
     @endif
-     <h1 class="text-2xl font-bold">Pemasukan</h1>
+    <div>
+        <h1 class="text-2xl font-bold">Pemasukan</h1>
         <p class="text-sm text-gray-500 dark:text-neutral-400">
             Daftar pemasukan km selama periode tertentu yang tercatat.
         </p>
+    </div>
     <div class="py-3 pt-5 flex flex-wrap justify-between gap-2">
         <div class="flex flex-wrap items-center gap-2 flex-1 min-w-0">
             <div class="relative min-w-0 max-w-45 sm:max-w-xs">
@@ -17,8 +19,8 @@
                     placeholder="Cari...">
                 <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                     <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg"
-                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.3-4.3"></path>
                     </svg>
@@ -28,10 +30,9 @@
         </div>
         <div>
             <div class="flex-shrink-0">
-                <button wire:click="tampilTambah"
-                    class="bg-primary rounded-2xl py-2 px-3 text-white font-semibold text-sm shadow-md">
-                    + Tambah
-                </button>
+                <x-button wire:click="tampilTambah" icon="plus" class="mr-3">
+                    Tambah
+                </x-button>
             </div>
         </div>
     </div>
@@ -69,7 +70,7 @@
                                     Action</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tbody class="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-neutral-700">
 
                             @forelse ($transaksi as $index => $item)
                                 <tr>
@@ -77,7 +78,8 @@
                                         wire:click="edit('{{ $item->id }}')">
                                         {{ $transaksi->firstItem() + $index }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         @php
                                             $emojiMap = [
                                                 'gaji' => '💰',
@@ -104,15 +106,18 @@
                                             <span class="text-sm font-medium">{{ ucwords($item->jenis) }}</span>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         Rp {{ number_format($item->total, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         <span
                                             class="inline-flex items-center gap-x-1.5 py-0.5 px-3  rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->metode_pembayaran }}</span>
 
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         @if ($item->status == 'lunas')
                                             <span
                                                 class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-800/30 dark:text-teal-500">{{ $item->status }}</span>
@@ -121,10 +126,12 @@
                                                 class="inline-flex items-center gap-x-1.5 py-0.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">{{ $item->status }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         {{ $item->deskripsi }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer" wire:click="edit('{{ $item->id }}')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-pointer"
+                                        wire:click="edit('{{ $item->id }}')">
                                         {{ $item->tanggal->timezone('Asia/Jakarta')->translatedFormat('l, d M Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
@@ -146,9 +153,10 @@
                                         </a>
                                     </td>
                                 </tr>
-                             @empty
+                            @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-neutral-400">
+                                    <td colspan="8"
+                                        class="px-6 py-10 text-center text-sm text-gray-500 dark:text-neutral-400">
                                         Belum ada catatan pemasukan.
                                     </td>
                                 </tr>
@@ -159,7 +167,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-4 py-4 border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="px-4 py-4  border-gray-200 dark:border-neutral-700">
             {{ $transaksi->links() }}
         </div>
     </div>

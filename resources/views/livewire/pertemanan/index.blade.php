@@ -40,7 +40,7 @@
             <button type="button" wire:click="gantiTab('teman')"
                 @class([
                     'py-3 px-4 inline-flex items-center gap-2 text-sm font-medium border-b-2',
-                    'border-primary text-primary dark:text-white' => $tab === 'teman',
+                    'border-primary dark:border-gray-200 text-primary dark:text-white' => $tab === 'teman',
                     'border-transparent text-gray-500 hover:text-gray-700 dark:text-neutral-400' => $tab !== 'teman',
                 ])>
                 Teman
@@ -51,7 +51,7 @@
             <button type="button" wire:click="gantiTab('masuk')"
                 @class([
                     'py-3 px-4 inline-flex items-center gap-2 text-sm font-medium border-b-2',
-                    'border-primary text-primary dark:text-white' => $tab === 'masuk',
+                    'border-primary dark:border-gray-200 text-primary dark:text-white' => $tab === 'masuk',
                     'border-transparent text-gray-500 hover:text-gray-700 dark:text-neutral-400' => $tab !== 'masuk',
                 ])>
                 Permintaan Masuk
@@ -64,7 +64,7 @@
             <button type="button" wire:click="gantiTab('terkirim')"
                 @class([
                     'py-3 px-4 inline-flex items-center gap-2 text-sm font-medium border-b-2',
-                    'border-primary text-primary dark:text-white' => $tab === 'terkirim',
+                    'border-primary dark:border-gray-200 text-primary dark:text-white' => $tab === 'terkirim',
                     'border-transparent text-gray-500 hover:text-gray-700 dark:text-neutral-400' => $tab !== 'terkirim',
                 ])>
                 Terkirim
@@ -82,11 +82,13 @@
         <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @forelse ($temanList as $item)
                 @php
+                    
                     $teman = $item->id_user === auth()->id() ? $item->teman : $item->user;
+                    // dd($item->teman);
                 @endphp
                 <div class="border border-gray-200 dark:border-neutral-700 rounded-xl p-4 flex items-center justify-between bg-white dark:bg-neutral-900">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div class="size-10 shrink-0 rounded-full bg-primary/20 text-primary flex items-center justify-center font-semibold uppercase">
+                        <div class="size-10 shrink-0 rounded-full bg-primary/20 dark:bg-gray-100 text-primary flex items-center justify-center font-semibold uppercase">
                             {{ \Illuminate\Support\Str::of($teman->name)->explode(' ')->take(2)->map(fn ($w) => \Illuminate\Support\Str::substr($w, 0, 1))->implode('') }}
                         </div>
                         <div class="min-w-0">

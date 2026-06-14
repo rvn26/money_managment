@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hutang;
 use App\Models\Pertemanan;
 use App\Models\User;
+use App\Services\FcmService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,9 @@ class HutangController extends Controller
         ]);
 
         try {
-            $userId = Auth::user()->id;
+
+            $user = Auth::user();
+            $userId = $user->id;
 
             // Jika id_teman dipilih, pastikan benar-benar teman aktif (status accepted).
             if ($request->filled('id_teman')) {
@@ -61,18 +64,19 @@ class HutangController extends Controller
                     })
                     ->exists();
 
-                if (! $isTeman) {
+                if (!$isTeman) {
                     return redirect()->back()->with('error', 'Pengguna tersebut bukan teman kamu');
                 }
             }
-            
+
             // dd($teman);
             $hutang = new Hutang;
             $hutang->id_user = $userId;
             $hutang->id_teman = $request->id_teman;
             if ($request->id_teman != null) {
-                $teman = User::find($request->id_teman)->first();
+                $teman = User::find($request->id_teman);
                 $hutang->nama = $teman->name;
+                //  dd($hutang->nama);
             } else {
                 $hutang->nama = $request->nama ?: null;
             }
@@ -83,9 +87,23 @@ class HutangController extends Controller
             $hutang->catatan = $request->catatan;
             $hutang->save();
 
+            if ($hutang->id_teman) {
+                $temanUser = User::find($hutang->id_teman);
+                if ($temanUser) {
+                    $jumlahFormatted = number_format($hutang->jumlah, 0, ',', '.');
+                    app(FcmService::class)->sendToUser(
+                        $temanUser,
+                        'Hutang Baru',
+                        "{$user->name} mencatat hutang kamu sebesar Rp{$jumlahFormatted}.",
+                        'hutang',
+                        ['hutang_id' => (string) $hutang->id, 'aksi' => 'hutang_baru']
+                    );
+                }
+            }
+
             return redirect()->back()->with('message', 'Hutang berhasil ditambahkan');
         } catch (Exception $e) {
-            Log::error('Error adding hutang: '.$e->getMessage());
+            Log::error('Error adding hutang: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'Gagal menambahkan hutang, silakan coba lagi');
         }
@@ -118,7 +136,7 @@ class HutangController extends Controller
 
             return redirect()->back()->with('message', 'Hutang berhasil diperbarui');
         } catch (Exception $e) {
-            Log::error('Error updating hutang: '.$e->getMessage());
+            Log::error('Error updating hutang: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'Gagal memperbarui hutang, silakan coba lagi');
         }
@@ -138,7 +156,7 @@ class HutangController extends Controller
 
             return redirect()->back()->with('message', 'Hutang berhasil dihapus');
         } catch (Exception $e) {
-            Log::error('Error deleting hutang: '.$e->getMessage());
+            Log::error('Error deleting hutang: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'Gagal menghapus hutang, silakan coba lagi');
         }

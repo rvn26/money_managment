@@ -4,6 +4,13 @@
     @elseif($errors->any())
         @livewire('component.notif-error')
     @endif
+    <div class="mb-5">
+        <h1 class="text-2xl font-bold">Hallo, {{ $user  }}</h1>
+        <p class="text-sm text-gray-500 dark:text-neutral-400">
+            Selamat datang di aplikasi kepitink,<br>
+            Pantau arus keuangan kamu yang tercatat.
+        </p>
+    </div>
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div

@@ -190,9 +190,12 @@ class Index extends Component
     public function render()
     {
         $this->filterData();
+        $user = Auth::user()->name;
 
         return view(
-            'livewire.dashboard.index'
+            'livewire.dashboard.index', [
+                'user' => $user,
+            ]
         );
     }
 }

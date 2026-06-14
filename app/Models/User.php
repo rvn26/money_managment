@@ -84,6 +84,22 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     }
 
     /**
+     * FCM device tokens milik user ini.
+     */
+    public function fcmTokens()
+    {
+        return $this->hasMany(FcmToken::class, 'id_user');
+    }
+
+    /**
+     * Notifikasi milik user ini.
+     */
+    public function notifikasis()
+    {
+        return $this->hasMany(Notifikasi::class, 'id_user');
+    }
+
+    /**
      * Hutang yang dicatat oleh teman dengan saya sebagai yang berhutang.
      */
     public function hutangSaya()

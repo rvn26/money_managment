@@ -55,7 +55,7 @@
                                 <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">Tanggal</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tbody class="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-neutral-700">
                             @forelse ($hutang as $index => $item)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
@@ -107,7 +107,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-4 py-4 border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="px-4 py-4 ">
             {{ $hutang->links() }}
         </div>
     </div>

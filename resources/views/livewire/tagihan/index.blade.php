@@ -5,7 +5,10 @@
         @livewire('component.notif-error')
     @endif
     <div>
-        <h1 class="text-2xl font-bold">Pengeluaran</h1>
+        <h1 class="text-2xl font-bold">Tagihan kamu</h1>
+        <p class="text-sm text-gray-500 dark:text-neutral-400">
+            Daftar tagihan kamu selama periode tertentu yang tercatat.
+        </p>
     </div>
     <div class="py-3 pt-5 flex flex-wrap justify-between gap-2">
         <div class="flex flex-wrap items-center gap-2 flex-1 min-w-0">
@@ -68,7 +71,7 @@
                                     Action</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tbody class="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-neutral-700">
 
                             @forelse($tagihan as $index => $item)
                                 <tr>
@@ -168,7 +171,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-4 py-4 border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="px-4 py-4 ">
             {{ $tagihan->links() }}
         </div>
     </div>

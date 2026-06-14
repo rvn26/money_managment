@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\HasPeriodeFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Kategori;
 use App\Models\KategoriTagihan;
@@ -16,8 +17,15 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TagihanController extends Controller
 {
+    use HasPeriodeFilter;
+
     /**
-     * Get all tagihan for the authenticated user (with pagination).
+     * Get all tagihan for the authenticated user (with pagination and filter).
+     *
+     * Query params:
+     * - periode: 'semua' | 'bulan_ini' | 'minggu_ini' | 'custom' (default: 'bulan_ini')
+     * - bulan_custom: Format Y-m (contoh: 2024-06) - untuk periode 'custom'
+     * - limit: Jumlah data per halaman (default: 10, max: 100)
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -26,9 +34,14 @@ class TagihanController extends Controller
         try {
             $user = JWTAuth::parseToken()->authenticate();
             $limit = min((int) $request->query('limit', 10), 100);
-            $tagihan = Tagihan::with('kategori_tagihan')
-                ->where('id_user', $user->id)
-                ->paginate($limit);
+
+            $query = Tagihan::with('kategori_tagihan')
+                ->where('id_user', $user->id);
+
+            // Apply periode filter (default: bulan_ini)
+            $this->applyPeriodeFilter($query, 'jatuh_tempo', $request);
+
+            $tagihan = $query->latest('jatuh_tempo')->paginate($limit);
 
             return response()->json([
                 'statuscode' => 200,

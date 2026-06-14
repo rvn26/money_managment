@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\Api\BatasHarianController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\FcmTokenController;
+use App\Http\Controllers\Api\HutangController;
 use App\Http\Controllers\Api\KategoriPengeluaranController;
 use App\Http\Controllers\Api\KategoriTagihanController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PemasukanController;
 use App\Http\Controllers\Api\PengeluaranController;
+use App\Http\Controllers\Api\PertemananController;
 use App\Http\Controllers\Api\TagihanController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -98,11 +102,43 @@ Route::group([
 
 Route::group([
     'middleware' => ['api', 'auth:api'],
-    'prefix' => 'hutang'
+    'prefix' => 'hutang',
 ], function () {
-    Route::get('/', [TagihanController::class, 'index']);
-    Route::get('/{id}', [TagihanController::class, 'show']);
-    Route::post('/', [TagihanController::class, 'store']);
-    Route::put('/{id}', [TagihanController::class, 'update']);
-    Route::delete('/{id}', [TagihanController::class, 'destroy']);
+    Route::get('/', [HutangController::class, 'index']);
+    Route::get('/hutang-saya', [HutangController::class, 'hutangSaya']);
+    Route::get('/{id}', [HutangController::class, 'show']);
+    Route::post('/', [HutangController::class, 'store']);
+    Route::put('/{id}', [HutangController::class, 'update']);
+    Route::delete('/{id}', [HutangController::class, 'destroy']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'pertemanan',
+], function () {
+    Route::get('/', [PertemananController::class, 'index']);
+    Route::get('/permintaan-masuk', [PertemananController::class, 'permintaanMasuk']);
+    Route::get('/permintaan-terkirim', [PertemananController::class, 'permintaanTerkirim']);
+    Route::post('/cari-user', [PertemananController::class, 'cariUser']);
+    Route::post('/kirim', [PertemananController::class, 'kirim']);
+    Route::put('/terima/{id}', [PertemananController::class, 'terima']);
+    Route::delete('/{id}', [PertemananController::class, 'hapus']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'fcm-token',
+], function () {
+    Route::post('/', [FcmTokenController::class, 'store']);
+    Route::delete('/', [FcmTokenController::class, 'destroy']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'notifikasi',
+], function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/belum-dibaca', [NotificationController::class, 'belumDibaca']);
+    Route::put('/baca-semua', [NotificationController::class, 'bacaSemua']);
+    Route::put('/{id}/baca', [NotificationController::class, 'baca']);
 });

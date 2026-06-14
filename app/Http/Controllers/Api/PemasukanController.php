@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\HasPeriodeFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Pemasukan;
 use Exception;
@@ -12,8 +13,15 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PemasukanController extends Controller
 {
+    use HasPeriodeFilter;
+
     /**
-     * Get all pemasukan for the authenticated user (with pagination).
+     * Get all pemasukan for the authenticated user (with pagination and filter).
+     *
+     * Query params:
+     * - periode: 'semua' | 'bulan_ini' | 'minggu_ini' | 'custom' (default: 'bulan_ini')
+     * - bulan_custom: Format Y-m (contoh: 2024-06) - untuk periode 'custom'
+     * - limit: Jumlah data per halaman (default: 10, max: 100)
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -22,21 +30,28 @@ class PemasukanController extends Controller
         try {
             $user = JWTAuth::parseToken()->authenticate();
             $limit = min((int) $request->query('limit', 10), 100);
-            $pemasukan = Pemasukan::where('id_user', $user->id)->paginate($limit);
+
+            $query = Pemasukan::where('id_user', $user->id);
+
+            // Apply periode filter (default: bulan_ini)
+            $this->applyPeriodeFilter($query, 'tanggal', $request);
+
+            $pemasukan = $query->latest('tanggal')->paginate($limit);
 
             return response()->json([
                 'statuscode' => 200,
-                'msg'        => 'Data pemasukan berhasil diambil.',
-                'data'       => $pemasukan->items(),
+                'msg' => 'Data pemasukan berhasil diambil.',
+                'data' => $pemasukan->items(),
                 'pagination' => [
                     'current_page' => $pemasukan->currentPage(),
-                    'last_page'    => $pemasukan->lastPage(),
-                    'per_page'     => $pemasukan->perPage(),
-                    'total'        => $pemasukan->total(),
+                    'last_page' => $pemasukan->lastPage(),
+                    'per_page' => $pemasukan->perPage(),
+                    'total' => $pemasukan->total(),
                 ],
             ], 200);
         } catch (Exception $e) {
-            Log::error('Gagal mengambil pemasukan: ' . $e->getMessage());
+            Log::error('Gagal mengambil pemasukan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengambil data pemasukan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -44,7 +59,7 @@ class PemasukanController extends Controller
     /**
      * Get a single pemasukan by ID.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -53,13 +68,14 @@ class PemasukanController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $pemasukan = Pemasukan::where('id_user', $user->id)->find($id);
 
-            if (!$pemasukan) {
+            if (! $pemasukan) {
                 return $this->sendError('Pemasukan tidak ditemukan.', [], 404);
             }
 
             return $this->sendResponse($pemasukan, 'Detail pemasukan berhasil diambil.');
         } catch (Exception $e) {
-            Log::error('Gagal mengambil detail pemasukan: ' . $e->getMessage());
+            Log::error('Gagal mengambil detail pemasukan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengambil detail pemasukan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -67,18 +83,17 @@ class PemasukanController extends Controller
     /**
      * Store a new pemasukan.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'tanggal'           => 'required|date|before_or_equal:today',
-            'jenis'             => 'required|in:gaji,bonus,penjualan,investasi,lain-lain',
-            'total'             => 'required|numeric|min:0.01',
+            'tanggal' => 'required|date|before_or_equal:today',
+            'jenis' => 'required|in:gaji,bonus,penjualan,investasi,lain-lain',
+            'total' => 'required|numeric|min:0.01',
             'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'status'            => 'required|in:pending,lunas',
-            'deskripsi'         => 'required|string|max:500',
+            'status' => 'required|in:pending,lunas',
+            'deskripsi' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -100,7 +115,8 @@ class PemasukanController extends Controller
 
             return $this->sendResponse($pemasukan, 'Pemasukan berhasil ditambahkan.', 201);
         } catch (Exception $e) {
-            Log::error('Gagal simpan pemasukan: ' . $e->getMessage());
+            Log::error('Gagal simpan pemasukan: '.$e->getMessage());
+
             return $this->sendError('Gagal menyimpan pemasukan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -108,19 +124,18 @@ class PemasukanController extends Controller
     /**
      * Update an existing pemasukan.
      *
-     * @param Request $request
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'tanggal'           => 'required|date|before_or_equal:today',
-            'jenis'             => 'required|in:gaji,bonus,penjualan,investasi,lain-lain',
-            'total'             => 'required|numeric|min:0.01',
+            'tanggal' => 'required|date|before_or_equal:today',
+            'jenis' => 'required|in:gaji,bonus,penjualan,investasi,lain-lain',
+            'total' => 'required|numeric|min:0.01',
             'metode_pembayaran' => 'required|in:Qris,Bank,Dana,Gopay,Cash',
-            'status'            => 'required|in:pending,lunas',
-            'deskripsi'         => 'required|string|max:500',
+            'status' => 'required|in:pending,lunas',
+            'deskripsi' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -131,7 +146,7 @@ class PemasukanController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $pemasukan = Pemasukan::where('id_user', $user->id)->find($id);
 
-            if (!$pemasukan) {
+            if (! $pemasukan) {
                 return $this->sendError('Pemasukan tidak ditemukan.', [], 404);
             }
 
@@ -145,7 +160,8 @@ class PemasukanController extends Controller
 
             return $this->sendResponse($pemasukan, 'Pemasukan berhasil diupdate.');
         } catch (Exception $e) {
-            Log::error('Gagal update pemasukan: ' . $e->getMessage());
+            Log::error('Gagal update pemasukan: '.$e->getMessage());
+
             return $this->sendError('Gagal mengupdate pemasukan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -153,7 +169,7 @@ class PemasukanController extends Controller
     /**
      * Delete a pemasukan.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -162,7 +178,7 @@ class PemasukanController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $pemasukan = Pemasukan::where('id_user', $user->id)->find($id);
 
-            if (!$pemasukan) {
+            if (! $pemasukan) {
                 return $this->sendError('Pemasukan tidak ditemukan.', [], 404);
             }
 
@@ -170,7 +186,8 @@ class PemasukanController extends Controller
 
             return $this->sendResponse([], 'Pemasukan berhasil dihapus.');
         } catch (Exception $e) {
-            Log::error('Gagal hapus pemasukan: ' . $e->getMessage());
+            Log::error('Gagal hapus pemasukan: '.$e->getMessage());
+
             return $this->sendError('Gagal menghapus pemasukan.', ['error' => $e->getMessage()], 500);
         }
     }
@@ -182,8 +199,8 @@ class PemasukanController extends Controller
     {
         return response()->json([
             'statuscode' => $code,
-            'msg'        => $message,
-            'data'       => $result,
+            'msg' => $message,
+            'data' => $result,
         ], $code);
     }
 
@@ -194,8 +211,8 @@ class PemasukanController extends Controller
     {
         return response()->json([
             'statuscode' => $code,
-            'msg'        => $error,
-            'data'       => $errorMessages,
+            'msg' => $error,
+            'data' => $errorMessages,
         ], $code);
     }
 }
