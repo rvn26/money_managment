@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BatasHarianController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KategoriTagihanController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\TagihanController;
 use App\Livewire\Pengeluaran\HasilScan;
 use Illuminate\Support\Facades\Route;
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::get('/', function () {
     return view('livewire.auth.login');
