@@ -13,7 +13,7 @@ services:
       APP_KEY: "${APP_KEY}"
       APP_ENV: "${APP_ENV:-production}"
       APP_DEBUG: "${APP_DEBUG:-false}"
-      APP_URL: "${APP_URL:-https://kepitink.dcat.web.id}"
+      APP_URL: "${APP_URL:-https://kepitink.web.id}"
 
       LOG_CHANNEL: stderr
       LOG_LEVEL: "${LOG_LEVEL:-info}"
