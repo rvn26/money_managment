@@ -29,7 +29,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 ENV COMPOSER_IP_RESOLVE=v4
-RUN composer install --no-dev --no-scripts --no-autoloader
+RUN composer install --no-dev --no-scripts --no-autoloader --ignore-platform-reqs
 
 # Copy package files for npm caching
 COPY package.json package-lock.json ./
