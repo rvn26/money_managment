@@ -8,21 +8,6 @@ services:
     container_name: kepitink-app
     restart: unless-stopped
 
-    labels:
-      - "traefik.enable=true"
-      # Membuat router HTTP & HTTPS untuk domain kamu
-      - "traefik.http.routers.kepitink-http.rule=Host(`kepitink.web.id`)"
-      - "traefik.http.routers.kepitink-http.entrypoints=web"
-
-      - "traefik.http.routers.kepitink-https.rule=Host(`kepitink.web.id`)"
-      - "traefik.http.routers.kepitink-https.entrypoints=websecure"
-      - "traefik.http.routers.kepitink-https.tls=true"
-      # Dokploy biasanya menggunakan nama resolver 'letsencrypt' atau 'websecure'
-      - "traefik.http.routers.kepitink-https.tls.certresolver=letsencrypt"
-
-      # Mengarahkan rute Traefik langsung ke port 80 milik Nginx di dalam container
-      - "traefik.http.services.kepitink-service.loadbalancer.server.port=80"
-
     environment:
       APP_NAME: "${APP_NAME:-KEPITINK}"
       APP_KEY: "${APP_KEY}"
