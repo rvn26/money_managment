@@ -27,6 +27,8 @@ WORKDIR /var/www/html
 
 # Copy composer files first (better caching)
 COPY composer.json composer.lock ./
+
+ENV COMPOSER_IP_RESOLVE=v4
 RUN composer install --no-dev --no-scripts --no-autoloader
 
 # Copy package files for npm caching
