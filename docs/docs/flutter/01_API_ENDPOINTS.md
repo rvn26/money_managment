@@ -34,6 +34,38 @@ POST /auth/login
 }
 ```
 
+### Login with Google
+```
+POST /auth/google
+```
+**Body:**
+```json
+{
+  "id_token": "your_google_id_token_from_client_sdk"
+}
+```
+**Response (Success 200):**
+```json
+{
+  "statuscode": 200,
+  "msg": "Login dengan Google berhasil.",
+  "data": {
+    "access_token": "eyJhbGciOi...",
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "user": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "google_id": "10293847561029384756",
+      "created_at": "2026-06-19T12:00:00.000000Z",
+      "updated_at": "2026-06-19T12:00:00.000000Z"
+    }
+  }
+}
+```
+
+
 ### Logout
 ```
 POST /auth/logout

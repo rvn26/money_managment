@@ -7,6 +7,8 @@ Complete REST API documentation with Dart models for Flutter integration.
 1. **[01_API_ENDPOINTS.md](01_API_ENDPOINTS.md)** - Complete API Endpoints Reference
 2. **[02_DART_MODELS.md](02_DART_MODELS.md)** - All Dart Models (Copy-Paste Ready)
 3. **[03_IMPLEMENTATION_GUIDE.md](03_IMPLEMENTATION_GUIDE.md)** - Complete Implementation Guide with Examples
+4. **[04_GOOGLE_SIGN_IN.md](04_GOOGLE_SIGN_IN.md)** - Google Sign-In Integration Guide (Android & iOS)
+
 
 ## ⚡ Quick Start
 
@@ -39,8 +41,10 @@ Authorization: Bearer {your_jwt_token}
 ### Authentication
 
 - ✅ Register, Login, Logout
+- ✅ Google Sign-In (Social Authentication)
 - ✅ Get Profile, Refresh Token
 - ✅ JWT Token based
+
 
 ### Pemasukan (Income)
 

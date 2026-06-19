@@ -233,7 +233,11 @@ class AuthService {
 }
 ```
 
+> [!NOTE]
+> Untuk implementasi autentikasi menggunakan Google Sign-In (Social Auth), silakan ikuti panduan terpisah di **[04_GOOGLE_SIGN_IN.md](04_GOOGLE_SIGN_IN.md)**.
+
 ---
+
 
 ## 💰 Pemasukan Service
 

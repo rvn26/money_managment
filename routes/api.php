@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BatasHarianController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FcmTokenController;
+use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\HutangController;
 use App\Http\Controllers\Api\KategoriPengeluaranController;
 use App\Http\Controllers\Api\KategoriTagihanController;
@@ -24,6 +25,7 @@ Route::group([
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/google', [GoogleAuthController::class, 'loginWithGoogle']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware(['auth:api', 'verified']);
     Route::get('/profile', [AuthController::class, 'profile'])->middleware(['auth:api', 'verified']);

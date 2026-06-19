@@ -2,6 +2,11 @@
 
 Welcome to Kelola Uang API documentation!
 
+## 📘 Buku Panduan Utama
+
+* **➡️ [Baca Buku Panduan Sistem Terpadu (Indonesian)](../PANDUAN_SISTEM_TERINTEGRASI.md)** - Panduan lengkap terpadu yang menyatukan deskripsi aplikasi, desain sistem & skema database, implementasi logika fitur, serta mekanisme integrasi multi-platform (Web Livewire & Mobile Flutter).
+* **➡️ [Baca Tutorial Step-by-Step Implementasi Fitur (Indonesian)](../PANDUAN_TUTORIAL_IMPLEMENTASI.md)** - Panduan langkah demi langkah berupa tutorial interaktif, potongan kode kunci, diagram pemrosesan, dan ilustrasi tangkapan layar untuk Web & Mobile.
+
 ## 📱 Flutter Integration
 
 Complete Flutter integration documentation with Dart models and implementation guides.
@@ -19,6 +24,8 @@ Complete Flutter integration documentation with Dart models and implementation g
 - **[API Endpoints](flutter/01_API_ENDPOINTS.md)** - All endpoints with examples
 - **[Dart Models](flutter/02_DART_MODELS.md)** - All models ready to use
 - **[Implementation Guide](flutter/03_IMPLEMENTATION_GUIDE.md)** - Complete guide with examples
+- **[Google Sign-In Guide](flutter/04_GOOGLE_SIGN_IN.md)** - Google auth setup & code
+
 
 ---
 

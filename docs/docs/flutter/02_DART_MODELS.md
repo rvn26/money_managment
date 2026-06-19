@@ -97,6 +97,7 @@ class User {
   final int id;
   final String name;
   final String email;
+  final String? googleId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   
@@ -104,6 +105,7 @@ class User {
     required this.id,
     required this.name,
     required this.email,
+    this.googleId,
     this.createdAt,
     this.updatedAt,
   });
@@ -113,6 +115,7 @@ class User {
       id: json['id'] as int,
       name: json['name'] as String,
       email: json['email'] as String,
+      googleId: json['google_id'] as String?,
       createdAt: json['created_at'] != null 
           ? DateTime.parse(json['created_at'] as String)
           : null,
@@ -127,6 +130,7 @@ class User {
       'id': id,
       'name': name,
       'email': email,
+      'google_id': googleId,
     };
   }
 }
