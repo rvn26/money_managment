@@ -48,11 +48,31 @@ class PertemananController extends Controller
                     });
                 })
                 ->latest()
-                ->get();
+                ->get()
+                ->map(function ($pertemanan) use ($user) {
+                    // Jika saya adalah id_user, maka teman saya adalah objek 'teman'
+                    // Jika saya adalah id_teman, maka teman saya adalah objek 'user'
+                    if ($pertemanan->id_teman === $user->id) {
+                        // Simpan sementara relasi data pengirim asli
+                        $pencetus = $pertemanan->user;
+                        $idPencetus = $pertemanan->id_user;
+
+                        // Set kolom user/id_user menjadi diri kamu sendiri
+                        $pertemanan->id_user = $pertemanan->id_teman;
+                        $pertemanan->user = $pertemanan->teman;
+
+                        // Set kolom teman/id_teman menjadi profil teman kamu (si pengirim asli)
+                        $pertemanan->id_teman = $idPencetus;
+                        $pertemanan->teman = $pencetus;
+                    }
+
+                    return $pertemanan;
+                });
+
 
             return $this->sendResponse($temanList, 'Daftar teman berhasil diambil.');
         } catch (Exception $e) {
-            Log::error('Gagal mengambil daftar teman: '.$e->getMessage());
+            Log::error('Gagal mengambil daftar teman: ' . $e->getMessage());
 
             return $this->sendError('Gagal mengambil daftar teman.', ['error' => $e->getMessage()], 500);
         }
@@ -76,7 +96,7 @@ class PertemananController extends Controller
 
             return $this->sendResponse($permintaanMasuk, 'Permintaan masuk berhasil diambil.');
         } catch (Exception $e) {
-            Log::error('Gagal mengambil permintaan masuk: '.$e->getMessage());
+            Log::error('Gagal mengambil permintaan masuk: ' . $e->getMessage());
 
             return $this->sendError('Gagal mengambil permintaan masuk.', ['error' => $e->getMessage()], 500);
         }
@@ -100,7 +120,7 @@ class PertemananController extends Controller
 
             return $this->sendResponse($permintaanTerkirim, 'Permintaan terkirim berhasil diambil.');
         } catch (Exception $e) {
-            Log::error('Gagal mengambil permintaan terkirim: '.$e->getMessage());
+            Log::error('Gagal mengambil permintaan terkirim: ' . $e->getMessage());
 
             return $this->sendError('Gagal mengambil permintaan terkirim.', ['error' => $e->getMessage()], 500);
         }
@@ -167,7 +187,7 @@ class PertemananController extends Controller
 
             return $this->sendResponse($pertemanan->load(['user', 'teman']), 'Permintaan pertemanan berhasil dikirim.', 201);
         } catch (Exception $e) {
-            Log::error('Gagal kirim permintaan pertemanan: '.$e->getMessage());
+            Log::error('Gagal kirim permintaan pertemanan: ' . $e->getMessage());
 
             return $this->sendError('Gagal mengirim permintaan pertemanan.', ['error' => $e->getMessage()], 500);
         }
@@ -189,7 +209,7 @@ class PertemananController extends Controller
                 ->where('status', 'pending')
                 ->first();
 
-            if (! $pertemanan) {
+            if (!$pertemanan) {
                 return $this->sendError('Permintaan pertemanan tidak ditemukan.', [], 404);
             }
 
@@ -210,7 +230,7 @@ class PertemananController extends Controller
 
             return $this->sendResponse($pertemanan->load(['user', 'teman']), 'Permintaan pertemanan berhasil diterima.');
         } catch (Exception $e) {
-            Log::error('Gagal terima pertemanan: '.$e->getMessage());
+            Log::error('Gagal terima pertemanan: ' . $e->getMessage());
 
             return $this->sendError('Gagal menerima permintaan.', ['error' => $e->getMessage()], 500);
         }
@@ -234,7 +254,7 @@ class PertemananController extends Controller
                 })
                 ->first();
 
-            if (! $pertemanan) {
+            if (!$pertemanan) {
                 return $this->sendError('Pertemanan tidak ditemukan.', [], 404);
             }
 
@@ -259,7 +279,7 @@ class PertemananController extends Controller
 
             return $this->sendResponse([], 'Pertemanan berhasil dihapus.');
         } catch (Exception $e) {
-            Log::error('Gagal hapus pertemanan: '.$e->getMessage());
+            Log::error('Gagal hapus pertemanan: ' . $e->getMessage());
 
             return $this->sendError('Gagal menghapus.', ['error' => $e->getMessage()], 500);
         }
@@ -285,7 +305,7 @@ class PertemananController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
             $targetUser = User::where('email', $request->email)->first();
 
-            if (! $targetUser) {
+            if (!$targetUser) {
                 return $this->sendError('Pengguna tidak ditemukan.', ['email' => ['Pengguna dengan email tersebut tidak ditemukan.']], 404);
             }
 
@@ -318,7 +338,7 @@ class PertemananController extends Controller
                 'can_send_request' => $status === null,
             ], 'Pengguna ditemukan.');
         } catch (Exception $e) {
-            Log::error('Gagal cari user: '.$e->getMessage());
+            Log::error('Gagal cari user: ' . $e->getMessage());
 
             return $this->sendError('Gagal mencari pengguna.', ['error' => $e->getMessage()], 500);
         }
