@@ -36,24 +36,24 @@ class Index extends Component
 
     public function render()
     {
-        $userId = Auth::user()->id;
+        $user = Auth::user();
 
         $temanList = Pertemanan::with(['user', 'teman'])
             ->where('status', 'accepted')
-            ->where(function ($q) use ($userId) {
-                $q->where('id_user', $userId)->orWhere('id_teman', $userId);
+            ->where(function ($q) use ($user) {
+                $q->where('id_user', $user->id)->orWhere('id_teman', $user->id);
             })
-            ->when($this->cari, function ($q) use ($userId) {
+            ->when($this->cari, function ($q) use ($user) {
                 $cari = $this->cari;
-                $q->where(function ($qq) use ($cari, $userId) {
-                    $qq->whereHas('user', function ($u) use ($cari, $userId) {
-                        $u->where('id', '!=', $userId)
+                $q->where(function ($qq) use ($cari, $user) {
+                    $qq->whereHas('user', function ($u) use ($cari, $user) {
+                        $u->where('id', '!=', $user->id)
                             ->where(function ($w) use ($cari) {
                                 $w->where('name', 'like', "%{$cari}%")
                                     ->orWhere('email', 'like', "%{$cari}%");
                             });
-                    })->orWhereHas('teman', function ($t) use ($cari, $userId) {
-                        $t->where('id', '!=', $userId)
+                    })->orWhereHas('teman', function ($t) use ($cari, $user) {
+                        $t->where('id', '!=', $user->id)
                             ->where(function ($w) use ($cari) {
                                 $w->where('name', 'like', "%{$cari}%")
                                     ->orWhere('email', 'like', "%{$cari}%");
@@ -62,16 +62,28 @@ class Index extends Component
                 });
             })
             ->latest()
-            ->get();
+            ->get()->map(function ($pertemanan) use ($user) {
+                $userAsli = $pertemanan->user;
+                $temanAsli = $pertemanan->teman;
 
+                if ($pertemanan->id_teman === $user->id) {
+                    $pertemanan->id_user = $temanAsli->id;
+                    $pertemanan->id_teman = $userAsli->id;
+
+                    $pertemanan->setRelation('user', $temanAsli);
+                    $pertemanan->setRelation('teman', $userAsli);
+                }
+                // dd($pertemanan);
+                return $pertemanan;
+            });
         $permintaanMasuk = Pertemanan::with('user')
-            ->where('id_teman', $userId)
+            ->where('id_teman', $user->id)
             ->where('status', 'pending')
             ->latest()
             ->get();
 
         $permintaanTerkirim = Pertemanan::with('teman')
-            ->where('id_user', $userId)
+            ->where('id_user', $user->id)
             ->where('status', 'pending')
             ->latest()
             ->get();

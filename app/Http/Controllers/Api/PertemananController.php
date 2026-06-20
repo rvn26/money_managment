@@ -54,19 +54,15 @@ class PertemananController extends Controller
                     $temanAsli = $pertemanan->teman;
 
                     if ($pertemanan->id_teman === $user->id) {
-                        $pertemanan->user = $temanAsli;
                         $pertemanan->id_user = $temanAsli->id;
-
-                        $pertemanan->teman = $userAsli;
                         $pertemanan->id_teman = $userAsli->id;
-                    } else {
-                        $pertemanan->user = $userAsli;
-                        $pertemanan->teman = $temanAsli;
+
+                        $pertemanan->setRelation('user', $temanAsli);
+                        $pertemanan->setRelation('teman', $userAsli);
                     }
 
                     return $pertemanan;
                 });
-
 
             return $this->sendResponse($temanList, 'Daftar teman berhasil diambil.');
         } catch (Exception $e) {
