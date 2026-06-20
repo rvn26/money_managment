@@ -15,8 +15,8 @@ return [
     |
     */
     // 'credentials' => storage_path(env('FIREBASE_CREDENTIALS', 'app/firebase/service-account.json')),
-    'credentials' => env('FIREBASE_SERVICE_ACCOUNT_JSON')
-        ? json_decode(env('FIREBASE_SERVICE_ACCOUNT_JSON'), true)
+    'credentials' => env('FIREBASE_SERVICE_ACCOUNT_BASE64')
+        ? json_decode(base64_decode(env('FIREBASE_SERVICE_ACCOUNT_BASE64')), true)
         : null,
 
     /*
