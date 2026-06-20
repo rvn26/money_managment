@@ -50,24 +50,18 @@ class PertemananController extends Controller
                 ->latest()
                 ->get()
                 ->map(function ($pertemanan) use ($user) {
-                    // Jika saya adalah id_user, maka teman saya adalah objek 'teman'
-                    // Jika saya adalah id_teman, maka teman saya adalah objek 'user'
+                    $userAsli = $pertemanan->user;
+                    $temanAsli = $pertemanan->teman;
+
                     if ($pertemanan->id_teman === $user->id) {
-                        // 1. Amankan SEMUA data asli pengirim & penerima ke variabel temporary
-                        $dataUserAsli = $pertemanan->user;
-                        $idUserAsli = $pertemanan->id_user;
+                        $pertemanan->user = $temanAsli;
+                        $pertemanan->id_user = $temanAsli->id;
 
-                        $dataTemanAsli = $pertemanan->teman;
-                        $idTemanAsli = $pertemanan->id_teman;
-
-                        // 2. Lakukan penukaran posisi secara total dan bersih
-                        // Sekarang, kolom 'user' akan berisi KAMU (Penerima)
-                        $pertemanan->id_user = $idTemanAsli;
-                        $pertemanan->user = $dataTemanAsli;
-
-                        // Dan kolom 'teman' akan berisi DIA (Pengirim)
-                        $pertemanan->id_teman = $idUserAsli;
-                        $pertemanan->teman = $dataUserAsli;
+                        $pertemanan->teman = $userAsli;
+                        $pertemanan->id_teman = $userAsli->id;
+                    } else {
+                        $pertemanan->user = $userAsli;
+                        $pertemanan->teman = $temanAsli;
                     }
 
                     return $pertemanan;
