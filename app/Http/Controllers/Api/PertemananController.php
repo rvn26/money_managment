@@ -53,17 +53,21 @@ class PertemananController extends Controller
                     // Jika saya adalah id_user, maka teman saya adalah objek 'teman'
                     // Jika saya adalah id_teman, maka teman saya adalah objek 'user'
                     if ($pertemanan->id_teman === $user->id) {
-                        // Simpan sementara relasi data pengirim asli
-                        $pencetus = $pertemanan->user;
-                        $idPencetus = $pertemanan->id_user;
+                        // 1. Amankan SEMUA data asli pengirim & penerima ke variabel temporary
+                        $dataUserAsli = $pertemanan->user;
+                        $idUserAsli = $pertemanan->id_user;
 
-                        // Set kolom user/id_user menjadi diri kamu sendiri
-                        $pertemanan->id_user = $pertemanan->id_teman;
-                        $pertemanan->user = $pertemanan->teman;
+                        $dataTemanAsli = $pertemanan->teman;
+                        $idTemanAsli = $pertemanan->id_teman;
 
-                        // Set kolom teman/id_teman menjadi profil teman kamu (si pengirim asli)
-                        $pertemanan->id_teman = $idPencetus;
-                        $pertemanan->teman = $pencetus;
+                        // 2. Lakukan penukaran posisi secara total dan bersih
+                        // Sekarang, kolom 'user' akan berisi KAMU (Penerima)
+                        $pertemanan->id_user = $idTemanAsli;
+                        $pertemanan->user = $dataTemanAsli;
+
+                        // Dan kolom 'teman' akan berisi DIA (Pengirim)
+                        $pertemanan->id_teman = $idUserAsli;
+                        $pertemanan->teman = $dataUserAsli;
                     }
 
                     return $pertemanan;
