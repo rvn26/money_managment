@@ -28,20 +28,20 @@ class PertemananController extends Controller
         ]);
 
         try {
-            $user = JWTAuth::parseToken()->authenticate();
-            $userId = Auth::user()->id;
+            $user = Auth::user();
+            // $userId = Auth::user()->id;
             $teman = User::where('email', $request->email)->firstOrFail();
 
-            if ($teman->id === $userId) {
+            if ($teman->id === $user->id) {
                 return redirect()->back()->with('error', 'Tidak bisa berteman dengan diri sendiri');
             }
 
             $sudahAda = Pertemanan::query()
-                ->where(function ($q) use ($userId, $teman) {
-                    $q->where('id_user', $userId)->where('id_teman', $teman->id);
+                ->where(function ($q) use ($user, $teman) {
+                    $q->where('id_user', $user->id)->where('id_teman', $teman->id);
                 })
-                ->orWhere(function ($q) use ($userId, $teman) {
-                    $q->where('id_user', $teman->id)->where('id_teman', $userId);
+                ->orWhere(function ($q) use ($user, $teman) {
+                    $q->where('id_user', $teman->id)->where('id_teman', $user->id);
                 })
                 ->exists();
 
@@ -50,7 +50,7 @@ class PertemananController extends Controller
             }
 
             $pertemanan = new Pertemanan;
-            $pertemanan->id_user = $userId;
+            $pertemanan->id_user = $user->id;
             $pertemanan->id_teman = $teman->id;
             $pertemanan->status = 'pending';
             $pertemanan->save();
@@ -77,13 +77,25 @@ class PertemananController extends Controller
     public function terima($id)
     {
         try {
+            $user = Auth::user();
             $pertemanan = Pertemanan::where('id', $id)
-                ->where('id_teman', Auth::user()->id)
+                ->where('id_teman', $user->id)
                 ->where('status', 'pending')
                 ->firstOrFail();
 
             $pertemanan->status = 'accepted';
             $pertemanan->save();
+
+            $pengirim = User::find($pertemanan->id_user);
+            if ($pengirim) {
+                app(FcmService::class)->sendToUser(
+                    $pengirim,
+                    'Pertemanan Diterima',
+                    "{$user->name} menerima permintaan pertemanan kamu.",
+                    'pertemanan',
+                    ['pertemanan_id' => (string) $pertemanan->id, 'aksi' => 'permintaan_diterima']
+                );
+            }
 
             return redirect()->back()->with('message', 'Permintaan pertemanan berhasil diterima');
         } catch (Exception $e) {
@@ -100,11 +112,12 @@ class PertemananController extends Controller
     public function hapus($id)
     {
         try {
-            $userId = Auth::user()->id;
+            $user = Auth::user();
+            // $userId = Auth::user()->id;
 
             $pertemanan = Pertemanan::where('id', $id)
-                ->where(function ($q) use ($userId) {
-                    $q->where('id_user', $userId)->orWhere('id_teman', $userId);
+                ->where(function ($q) use ($user) {
+                    $q->where('id_user', $user->id)->orWhere('id_teman', $user->id);
                 })
                 ->firstOrFail();
 
