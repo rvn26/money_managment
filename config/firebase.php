@@ -14,7 +14,10 @@ return [
     | Simpan file JSON tersebut di: storage/app/firebase/service-account.json
     |
     */
-    'credentials' => storage_path(env('FIREBASE_CREDENTIALS', 'app/firebase/service-account.json')),
+    // 'credentials' => storage_path(env('FIREBASE_CREDENTIALS', 'app/firebase/service-account.json')),
+    'credentials' => env('FIREBASE_SERVICE_ACCOUNT_JSON')
+        ? json_decode(env('FIREBASE_SERVICE_ACCOUNT_JSON'), true)
+        : null,
 
     /*
     |--------------------------------------------------------------------------
