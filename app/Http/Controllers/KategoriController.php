@@ -18,7 +18,7 @@ class KategoriController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'nama' => 'required|unique:kategoris,nama|max:255',
+            'nama' => 'required|max:255',
             'emoji' => 'nullable|string|max:10',
             'warna' => 'nullable|string|max:7',
             'deskripsi' => 'required|max:255',
@@ -35,7 +35,7 @@ class KategoriController extends Controller
             return redirect()->route('kategori')->with('message', 'kategori berhasil ditambahkan');
         } catch (Exception $e) {
 
-            Log::error('Gagal simpan kategori: '.$e->getMessage());
+            Log::error('Gagal simpan kategori: ' . $e->getMessage());
 
             return redirect()
                 ->route('kategori')
@@ -51,7 +51,7 @@ class KategoriController extends Controller
 
             return redirect()->back()->with('message', 'Kategori berhasil dihapus');
         } catch (Exception $e) {
-            Log::error('Gagal simpan Kategori: '.$e->getMessage());
+            Log::error('Gagal simpan Kategori: ' . $e->getMessage());
 
             return redirect()
                 ->back()
