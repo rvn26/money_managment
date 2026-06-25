@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,11 @@ class KategoriFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => User::factory(),
+            'nama' => $this->faker->unique()->word(),
+            'emoji' => $this->faker->randomElement(['🍔', '🚗', '🔌', '👕', '🏥', '🎮', '📚', '💼', '🛒']),
+            'warna' => $this->faker->safeHexColor(),
+            'deskripsi' => $this->faker->sentence(),
         ];
     }
 }
