@@ -96,20 +96,16 @@
                             <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">{{ $teman->email }}</p>
                         </div>
                     </div>
-                    <form action="{{ route('pertemanan.hapus', ['id' => $item->id]) }}" method="POST"
-                        onsubmit="return confirm('Hapus teman ini dari daftar?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                            title="Hapus teman">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                            </svg>
-                        </button>
-                    </form>
+                    <button type="button"
+                        wire:click="konfirmasiHapus({{ $item->id }}, '{{ addslashes($teman->name) }}')"
+                        class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                        title="Hapus teman">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                        </svg>
+                    </button>
                 </div>
             @empty
                 <div class="sm:col-span-2 lg:col-span-3 text-center py-10 text-sm text-gray-500 dark:text-neutral-400">
@@ -146,18 +142,15 @@
                                 </svg>
                             </button>
                         </form>
-                        <form action="{{ route('pertemanan.hapus', ['id' => $item->id]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                                title="Tolak permintaan">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </form>
+                        <button type="button"
+                            wire:click="konfirmasiTolak({{ $item->id }}, '{{ addslashes($item->user->name) }}')"
+                            class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                            title="Tolak permintaan">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             @empty
@@ -183,19 +176,15 @@
                             <span class="text-[10px] text-yellow-700 dark:text-yellow-400">Menunggu konfirmasi</span>
                         </div>
                     </div>
-                    <form action="{{ route('pertemanan.hapus', ['id' => $item->id]) }}" method="POST"
-                        onsubmit="return confirm('Batalkan permintaan ini?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                            title="Batalkan permintaan">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </form>
+                    <button type="button"
+                        wire:click="konfirmasiBatalkan({{ $item->id }}, '{{ addslashes($item->teman->name) }}')"
+                        class="text-red-600 hover:text-red-800 dark:text-red-500 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                        title="Batalkan permintaan">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
             @empty
                 <div class="sm:col-span-2 lg:col-span-3 text-center py-10 text-sm text-gray-500 dark:text-neutral-400">
@@ -204,4 +193,31 @@
             @endforelse
         </div>
     @endif
+
+    {{-- MODAL KONFIRMASI --}}
+    @php
+        $modalTitle = '';
+        $modalDescription = '';
+        if ($tipeAksi === 'hapus') {
+            $modalTitle = 'Hapus Teman';
+            $modalDescription = 'Apakah kamu yakin ingin menghapus ' . $namaTarget . ' dari daftar teman? Tindakan ini tidak dapat dibatalkan.';
+        } elseif ($tipeAksi === 'batalkan') {
+            $modalTitle = 'Batalkan Permintaan';
+            $modalDescription = 'Apakah kamu yakin ingin membatalkan permintaan pertemanan kepada ' . $namaTarget . '?';
+        } elseif ($tipeAksi === 'tolak') {
+            $modalTitle = 'Tolak Permintaan';
+            $modalDescription = 'Apakah kamu yakin ingin menolak permintaan pertemanan dari ' . $namaTarget . '?';
+        }
+    @endphp
+
+    <x-warning-modal wire:model="showKonfirmasiModal" :title="$modalTitle" :description="$modalDescription">
+        <button type="button" wire:click="eksekusiAksi"
+            class="w-full text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-500 dark:hover:bg-red-600 transition-colors">
+            Ya, Lanjutkan
+        </button>
+        <button type="button" wire:click="batalAksi"
+            class="w-full text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 transition-colors">
+            Batal
+        </button>
+    </x-warning-modal>
 </div>

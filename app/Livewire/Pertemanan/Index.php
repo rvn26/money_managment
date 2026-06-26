@@ -4,6 +4,7 @@ namespace App\Livewire\Pertemanan;
 
 use App\Models\Pertemanan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Index extends Component
@@ -12,6 +13,14 @@ class Index extends Component
 
     /** @var 'teman'|'masuk'|'terkirim' */
     public string $tab = 'teman';
+
+    public bool $showKonfirmasiModal = false;
+
+    public ?int $idPertemananYangDipilih = null;
+
+    public ?string $tipeAksi = null; // 'hapus' | 'batalkan' | 'tolak'
+
+    public ?string $namaTarget = null;
 
     protected $queryString = [
         'tab' => ['except' => 'teman'],
@@ -73,6 +82,7 @@ class Index extends Component
                     $pertemanan->setRelation('user', $temanAsli);
                     $pertemanan->setRelation('teman', $userAsli);
                 }
+
                 // dd($pertemanan);
                 return $pertemanan;
             });
@@ -93,5 +103,71 @@ class Index extends Component
             'permintaanMasuk' => $permintaanMasuk,
             'permintaanTerkirim' => $permintaanTerkirim,
         ]);
+    }
+
+    public function konfirmasiHapus(int $id, string $nama): void
+    {
+        $this->idPertemananYangDipilih = $id;
+        $this->namaTarget = $nama;
+        $this->tipeAksi = 'hapus';
+        $this->showKonfirmasiModal = true;
+    }
+
+    public function konfirmasiBatalkan(int $id, string $nama): void
+    {
+        $this->idPertemananYangDipilih = $id;
+        $this->namaTarget = $nama;
+        $this->tipeAksi = 'batalkan';
+        $this->showKonfirmasiModal = true;
+    }
+
+    public function konfirmasiTolak(int $id, string $nama): void
+    {
+        $this->idPertemananYangDipilih = $id;
+        $this->namaTarget = $nama;
+        $this->tipeAksi = 'tolak';
+        $this->showKonfirmasiModal = true;
+    }
+
+    public function batalAksi(): void
+    {
+        $this->showKonfirmasiModal = false;
+        $this->idPertemananYangDipilih = null;
+        $this->namaTarget = null;
+        $this->tipeAksi = null;
+    }
+
+    public function eksekusiAksi(): void
+    {
+        if (! $this->idPertemananYangDipilih) {
+            return;
+        }
+
+        try {
+            $user = Auth::user();
+            $pertemanan = Pertemanan::where('id', $this->idPertemananYangDipilih)
+                ->where(function ($q) use ($user) {
+                    $q->where('id_user', $user->id)->orWhere('id_teman', $user->id);
+                })
+                ->firstOrFail();
+
+            $pertemanan->delete();
+
+            $message = '';
+            if ($this->tipeAksi === 'hapus') {
+                $message = 'Pertemanan berhasil dihapus';
+            } elseif ($this->tipeAksi === 'batalkan') {
+                $message = 'Permintaan pertemanan berhasil dibatalkan';
+            } elseif ($this->tipeAksi === 'tolak') {
+                $message = 'Permintaan pertemanan berhasil ditolak';
+            }
+
+            session()->flash('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Gagal memproses aksi pertemanan: '.$e->getMessage());
+            session()->flash('error', 'Gagal memproses permintaan, silakan coba lagi');
+        }
+
+        $this->batalAksi();
     }
 }
