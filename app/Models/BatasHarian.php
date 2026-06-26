@@ -9,4 +9,11 @@ class BatasHarian extends Model
 {
     /** @use HasFactory<\Database\Factories\BatasHarianFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'id_user',
+        'batas',
+    ];
+
+
 }
